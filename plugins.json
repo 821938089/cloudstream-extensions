@@ -1,0 +1,358 @@
+[
+    {
+        "iconUrl": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://123animehub.cc&size=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 14679,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Horis"
+        ],
+        "tvTypes": [
+            "AnimeMovie",
+            "Anime",
+            "OVA"
+        ],
+        "version": 2,
+        "internalName": "AnimehubProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/AnimehubProvider.cs3",
+        "name": "AnimehubProvider"
+    },
+    {
+        "iconUrl": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://animexinax.com&size=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 19048,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Horis"
+        ],
+        "tvTypes": [
+            "AnimeMovie",
+            "Anime",
+            "OVA"
+        ],
+        "version": 2,
+        "internalName": "AnimexinaxProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/AnimexinaxProvider.cs3",
+        "name": "AnimexinaxProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=www.bdys01.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 23534,
+        "status": 1,
+        "language": "zh",
+        "authors": [
+            
+        ],
+        "tvTypes": [
+            "Movie",
+            "AnimeMovie",
+            "TvSeries",
+            "Anime",
+            "AsianDrama",
+            "Others"
+        ],
+        "version": 1,
+        "internalName": "BdysProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/BdysProvider.cs3",
+        "name": "BdysProvider"
+    },
+    {
+        "iconUrl": "https://cdn.jsdelivr.net/npm/@googledrive/index@2.0.20/images/favicon.ico",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 24787,
+        "status": 1,
+        "language": "hi",
+        "authors": [
+            "Horis"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 7,
+        "internalName": "BollywoodProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/BollywoodProvider.cs3",
+        "name": "BollywoodProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=yanetflix.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 23174,
+        "status": 1,
+        "language": "zh",
+        "authors": [
+            
+        ],
+        "tvTypes": [
+            "Movie",
+            "AnimeMovie",
+            "TvSeries",
+            "Anime",
+            "AsianDrama",
+            "Others"
+        ],
+        "version": 1,
+        "internalName": "DamixingqiuProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/DamixingqiuProvider.cs3",
+        "name": "DamixingqiuProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=ddys.tv&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 17131,
+        "status": 1,
+        "language": "zh",
+        "authors": [
+            
+        ],
+        "tvTypes": [
+            "Movie",
+            "AnimeMovie",
+            "TvSeries",
+            "Anime",
+            "AsianDrama",
+            "Others"
+        ],
+        "version": 1,
+        "internalName": "DdysProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/DdysProvider.cs3",
+        "name": "DdysProvider"
+    },
+    {
+        "iconUrl": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://desicinemas.tv&size=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 21697,
+        "status": 1,
+        "language": "hi",
+        "authors": [
+            "Horis"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 4,
+        "internalName": "DesicinemasProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/DesicinemasProvider.cs3",
+        "name": "DesicinemasProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dramacool.city&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 19108,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Horis"
+        ],
+        "tvTypes": [
+            "AsianDrama"
+        ],
+        "version": 2,
+        "internalName": "DramacoolProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/DramacoolProvider.cs3",
+        "name": "DramacoolProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=kshow123online.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 18303,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Horis"
+        ],
+        "tvTypes": [
+            "AsianDrama"
+        ],
+        "version": 2,
+        "internalName": "Kshow123Provider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/Kshow123Provider.cs3",
+        "name": "Kshow123Provider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=www.libvio.me&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 18093,
+        "status": 1,
+        "language": "zh",
+        "authors": [
+            
+        ],
+        "tvTypes": [
+            "Movie",
+            "AnimeMovie",
+            "TvSeries",
+            "Anime",
+            "AsianDrama",
+            "Others"
+        ],
+        "version": 8,
+        "internalName": "LibvioProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/LibvioProvider.cs3",
+        "name": "LibvioProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=www.mxplayer.in&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 31571,
+        "status": 1,
+        "language": "hi",
+        "authors": [
+            "Horis"
+        ],
+        "tvTypes": [
+            "AsianDrama",
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 3,
+        "internalName": "MxplayerProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/MxplayerProvider.cs3",
+        "name": "MxplayerProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=www.nivod.tv&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 28214,
+        "status": 1,
+        "language": "zh",
+        "authors": [
+            
+        ],
+        "tvTypes": [
+            "Movie",
+            "AnimeMovie",
+            "TvSeries",
+            "Anime",
+            "AsianDrama",
+            "Others"
+        ],
+        "version": 2,
+        "internalName": "NivodProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/NivodProvider.cs3",
+        "name": "NivodProvider"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=www.oulevod.tv&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 12031,
+        "status": 1,
+        "language": "zh",
+        "authors": [
+            
+        ],
+        "tvTypes": [
+            "Movie",
+            "AnimeMovie",
+            "TvSeries",
+            "Anime",
+            "AsianDrama",
+            "Others"
+        ],
+        "version": 4,
+        "internalName": "OulevodProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/OulevodProvider.cs3",
+        "name": "OulevodProvider"
+    },
+    {
+        "iconUrl": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://pahe.sbs&size=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 14801,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Horis"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 2,
+        "internalName": "PaheProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/PaheProvider.cs3",
+        "name": "PaheProvider"
+    },
+    {
+        "iconUrl": "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://sockshare.ac&size=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 16943,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Horis"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 2,
+        "internalName": "SockshareProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/SockshareProvider.cs3",
+        "name": "SockshareProvider"
+    },
+    {
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 45186,
+        "status": 1,
+        "language": "zh",
+        "authors": [
+            
+        ],
+        "tvTypes": [
+            "Movie",
+            "AnimeMovie",
+            "TvSeries",
+            "Cartoon",
+            "Anime",
+            "AsianDrama",
+            "Documentary",
+            "Others"
+        ],
+        "version": 9,
+        "internalName": "SuperVod",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/SuperVod.cs3",
+        "name": "SuperVod"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=yanetflix.com&sz=%size%",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/821938089/cloudstream-extensions",
+        "fileSize": 19101,
+        "status": 1,
+        "language": "zh",
+        "authors": [
+            
+        ],
+        "tvTypes": [
+            "Movie",
+            "AnimeMovie",
+            "TvSeries",
+            "Anime",
+            "AsianDrama",
+            "Others"
+        ],
+        "version": 2,
+        "internalName": "YaNaiFeiProvider",
+        "url": "https://raw.githubusercontent.com/821938089/cloudstream-extensions/builds/YaNaiFeiProvider.cs3",
+        "name": "YaNaiFeiProvider"
+    }
+]
