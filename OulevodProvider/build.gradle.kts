@@ -23,3 +23,7 @@ cloudstream {
     // https://recloudstream.github.io/cloudstream/html/app/com.lagradost.cloudstream3/-tv-type/index.html
     tvTypes = listOf("Movie", "AnimeMovie", "TvSeries", "Anime", "AsianDrama", "Others")
 }
+
+dependencies {
+    implementation(project(mapOf("path" to ":BaseProvider")))
+}
