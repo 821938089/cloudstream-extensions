@@ -7,7 +7,17 @@ import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.M3u8Helper
 import org.jsoup.nodes.Element
 
-class OulevodProvider : BaseProvider() {
+class OulevodProvider : MainAPI() {
+    override val supportedTypes = setOf(
+        TvType.Movie,
+        TvType.AnimeMovie,
+        TvType.TvSeries,
+        TvType.Anime,
+        TvType.AsianDrama,
+        TvType.Others
+    )
+    override var lang = "zh"
+
     override var mainUrl = "https://www.oulevod.tv"
     override var name = "欧乐影院"
 
