@@ -40,7 +40,7 @@ class OulevodProvider : MainAPI() {
     }
 
     private fun Element.toSearchResult(): SearchResponse? {
-        val title = selectFirst(".hl-item-text")?.text()?.trim() ?: return null
+        val title = selectFirst(".hl-item-text a")?.text()?.trim() ?: return null
         val href = fixUrl(selectFirst("a")?.attr("href").toString())
         val posterUrl = fixUrlNull(selectFirst("a")?.attr("data-original"))
         val episode = selectFirst("span.pic-text.text-right")?.text()?.filter { it.isDigit() }
@@ -73,13 +73,13 @@ class OulevodProvider : MainAPI() {
         } else {
             TvType.TvSeries
         }
-        val episodes = document.select(".hl-tabs-box a").map {
+        val episodes = document.select(".hl-tabs-box li a").map {
             val name = it.text()
             val href = it.attr("href")
             Episode(name = name, data = href)
         }
         return newTvSeriesLoadResponse(title, url, tvType, episodes) {
-            posterUrl = fixUrlNull(document.selectFirst("hl-dc-pic")?.attr("data-original"))
+            posterUrl = fixUrlNull(document.selectFirst(".hl-dc-pic span")?.attr("data-original"))
             year = document.select(".hl-full-box ul li").getOrNull(4)?.text()?.toIntOrNull()
         }
     }
