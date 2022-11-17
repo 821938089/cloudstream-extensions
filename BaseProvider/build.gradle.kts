@@ -1,12 +1,11 @@
 // use an integer for version numbers
-version = 2
+version = 1
 
 
 cloudstream {
     // All of these properties are optional, you can safely remove them
     language = "zh"
 
-//    description = "Lorem Ipsum"
 //    authors = listOf("Cloudburst")
 
     /**
@@ -21,11 +20,9 @@ cloudstream {
     // List of video source types. Users are able to filter for extensions in a given category.
     // You can find a list of avaliable types here:
     // https://recloudstream.github.io/cloudstream/html/app/com.lagradost.cloudstream3/-tv-type/index.html
-    tvTypes = listOf("Movie", "AnimeMovie", "TvSeries", "Anime", "AsianDrama", "Others")
-
-    iconUrl = "https://www.google.com/s2/favicons?domain=www.oulevod.tv&sz=%size%"
+    tvTypes = listOf("Others")
 }
 
 dependencies {
-    implementation(project(mapOf("path" to ":BaseProvider")))
+    implementation("com.jayway.jsonpath:json-path:2.7.0")
 }
