@@ -2,6 +2,7 @@
 version = 2
 
 
+
 cloudstream {
     // All of these properties are optional, you can safely remove them
     language = "zh"
@@ -23,7 +24,7 @@ cloudstream {
     // https://recloudstream.github.io/cloudstream/html/app/com.lagradost.cloudstream3/-tv-type/index.html
     tvTypes = listOf("Movie", "AnimeMovie", "TvSeries", "Anime", "AsianDrama", "Others")
 
-    iconUrl = "https://www.google.com/s2/favicons?domain=www.oulevod.tv&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=www.libvio.me&sz=%size%"
 }
 
 dependencies {
