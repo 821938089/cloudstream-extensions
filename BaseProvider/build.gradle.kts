@@ -22,7 +22,3 @@ cloudstream {
     // https://recloudstream.github.io/cloudstream/html/app/com.lagradost.cloudstream3/-tv-type/index.html
     tvTypes = listOf("Others")
 }
-
-dependencies {
-    implementation("com.jayway.jsonpath:json-path:2.7.0")
-}

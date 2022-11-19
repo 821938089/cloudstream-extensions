@@ -9,8 +9,19 @@ import com.lagradost.cloudstream3.utils.M3u8Helper
 import com.lagradost.nicehttp.NiceResponse
 import okhttp3.Interceptor
 import okhttp3.Response
+import org.jsoup.nodes.Element
 
-class LibvioProvider : BaseProvider() {
+class LibvioProvider : MainAPI() {
+    override val supportedTypes = setOf(
+        TvType.Movie,
+        TvType.AnimeMovie,
+        TvType.TvSeries,
+        TvType.Anime,
+        TvType.AsianDrama,
+        TvType.Others
+    )
+    override var lang = "zh"
+
     override var mainUrl = "https://www.libvio.me"
     override var name = "LIBVIO"
 
@@ -25,42 +36,7 @@ class LibvioProvider : BaseProvider() {
         "${mainUrl}/type/16" to "欧美剧",
     )
 
-    override val mainPageRule = MainPageRule(
-        list = "@html:ul.stui-vodlist > li",
-        url = "@html:a@href",
-        name = "@html:.title a@text",
-        posterUrl = "@html:a@data-original"
-    )
-
-    //override val searchRule = mainPageRule.toSearchRule()
-
-    override val loadRule = object : LoadRule(
-        name = "@html:.title a@text",
-        plot = "@html:.detail-content@text",
-        posterUrl = "@html:.stui-content__thumb img@data-original",
-        episodeList = "@html:.stui-vodlist__head h3, .stui-content__playlist a",
-        episodeName = "@html:h3, a@text",
-        episodeUrl = "@html:a@href"
-    ) {
-
-        override fun getYear(year: String?, res: NiceResponse): String? {
-            getString(res, "@html:.stui-content__detail .data@text")?.let {
-                return "年份：(\\d+)".toRegex().find(it)?.groupValues?.getOrNull(1)
-            }
-            return null
-        }
-
-        override fun getEpisodeName(episodeName: String?, res: NiceResponse): String? {
-            episodeName ?: return null
-            return if (episodeName == "猜你喜欢") null else episodeName
-        }
-
-        override fun getEpisodeUrl(episodeUrl: String?, res: NiceResponse): String? {
-            return episodeUrl ?: ""
-        }
-    }
-
-    override suspend fun fetchMainPage(page: Int, request: MainPageRequest): NiceResponse {
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         val url = if (request.name == "首页") {
             request.data
         } else if (page < 1) {
@@ -68,18 +44,53 @@ class LibvioProvider : BaseProvider() {
         } else {
             "${request.data}-$page.html"
         }
-        return app.get(url, referer = "$mainUrl/")
+        val doc = app.get(url, referer = "$mainUrl/").document
+        val items = doc.select("ul.stui-vodlist > li").mapNotNull {
+            it.toSearchResult()
+        }
+        return newHomePageResponse(request.name, items)
     }
 
-
-    override suspend fun fetchSearch(query: String): NiceResponse {
+    override suspend fun search(query: String): List<SearchResponse>? {
         val url = "$mainUrl/search/-------------.html?wd=$query&submit="
-        return app.get(url, referer = "$mainUrl/")
+        val doc = app.get(url, referer = "$mainUrl/").document
+        return doc.select("ul.stui-vodlist > li").mapNotNull {
+            it.toSearchResult()
+        }
     }
 
-    override suspend fun fetchLoad(url: String): NiceResponse {
-        return app.get(url, referer = "$mainUrl/")
+    private fun Element.toSearchResult(): SearchResponse? {
+        val name = selectFirst(".title a")?.text() ?: return null
+        val a = selectFirst("a")
+        val url = a?.attr("href") ?: return null
+        return newTvSeriesSearchResponse(name, url) {
+            posterUrl = a.attr("data-original")
+        }
     }
+
+    override suspend fun load(url: String): LoadResponse? {
+        val doc = app.get(url, referer = "$mainUrl/").document
+        val name = doc.selectFirst(".title a")?.text() ?: return null
+        val episodes = ArrayList<Episode>()
+        for (it in doc.select(".stui-vodlist__head")) {
+            val route = it.selectFirst("h3")?.text() ?: continue
+            if (route == "猜你喜欢") continue
+            for (ep in it.select(".stui-content__playlist a")) {
+                val episodeUrl = ep.selectFirst("a")?.attr("href") ?: continue
+                episodes.add(newEpisode(episodeUrl) {
+                    this.name = ep.selectFirst("a")!!.text()
+                })
+            }
+        }
+        return newTvSeriesLoadResponse(name, url, TvType.TvSeries, episodes) {
+            doc.selectFirst(".stui-content__detail .data")?.text()?.let {
+                year = "年份：(\\d+)".toRegex().find(it)?.groupValues?.getOrNull(1)?.toIntOrNull()
+            }
+            plot = doc.selectFirst(".detail-content")?.text()
+            posterUrl = doc.selectFirst(".stui-content__thumb img")?.attr("data-original")
+        }
+    }
+
 
     override suspend fun loadLinks(
         data: String,
