@@ -13,7 +13,7 @@ import okhttp3.Response
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 
-class OulevodProvider : BaseProvider() {
+class OulevodProvider : MainAPI() {
     override val supportedTypes = setOf(
         TvType.Movie,
         TvType.AnimeMovie,
@@ -77,13 +77,13 @@ class OulevodProvider : BaseProvider() {
 //        } else {
 //            TvType.TvSeries
 //        }
-        val episodes = document.select(".hl-tabs-box a").map {
+        val episodes = document.select(".hl-tabs-box li a").map {
             val name = it.text()
             val href = it.attr("href")
             Episode(name = name, data = href)
         }
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
-            posterUrl = fixUrlNull(document.selectFirst("hl-dc-pic")?.attr("data-original"))
+            posterUrl = fixUrlNull(document.selectFirst(".hl-dc-pic span")?.attr("data-original"))
             year = document.select(".hl-full-box ul li").getOrNull(4)?.text()?.toIntOrNull()
         }
     }
