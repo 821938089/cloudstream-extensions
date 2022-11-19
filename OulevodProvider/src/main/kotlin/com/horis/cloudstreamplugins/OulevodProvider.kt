@@ -43,7 +43,7 @@ class OulevodProvider : MainAPI() {
     }
 
     private fun Element.toSearchResult(): SearchResponse? {
-        val title = selectFirst(".hl-item-text")?.text()?.trim() ?: return null
+        val title = selectFirst(".hl-item-title a")?.text()?.trim() ?: return null
         val href = fixUrl(selectFirst("a")?.attr("href").toString())
         val posterUrl = fixUrlNull(selectFirst("a")?.attr("data-original"))
 
