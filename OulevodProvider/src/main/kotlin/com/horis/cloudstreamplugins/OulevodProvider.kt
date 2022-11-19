@@ -8,6 +8,7 @@ import com.lagradost.cloudstream3.utils.M3u8Helper
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 
 class OulevodProvider : MainAPI() {
     override val supportedTypes = setOf(
@@ -54,19 +55,22 @@ class OulevodProvider : MainAPI() {
 
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val document = app.get("$mainUrl/index.php/vod/search.html?wd=$query&submit=").document
-        val items = document.select("ul.hl-one-list").mapNotNull {
-            val name = it.selectFirst(".hl-item-content a")?.text()?.trim()
-                ?: return@mapNotNull null
-            val url = it.selectFirst("a")?.attr("href")
-                ?: return@mapNotNull null
-            newMovieSearchResponse(name, url)
+        val document = app.get(
+            "$mainUrl/index.php/vod/search.html?wd=$query&submit=", referer = "$mainUrl/"
+        ).document
+        val items = document.select("ul.hl-one-list li").mapNotNull {
+            val a = it.selectFirst(".hl-item-title a") ?: return@mapNotNull null
+            val name = a.text().trim()
+            val url = a.attr("href")
+            newMovieSearchResponse(name, url) {
+                posterUrl = fixUrlNull(it.selectFirst("a.hl-item-thumb")?.attr("data-original"))
+            }
         }
         return items
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val document = app.get(url).document
+        val document = app.get(url, referer = "$mainUrl/").document
         val title = document.selectFirst(".hl-dc-title")?.text()?.trim() ?: return null
 //        val tvType = if (document.selectFirst(".hl-text-conch.active")?.text() == "电影") {
 //            TvType.Movie
@@ -74,13 +78,17 @@ class OulevodProvider : MainAPI() {
 //            TvType.TvSeries
 //        }
         val episodes = document.select(".hl-tabs-box li a").map {
-            val name = it.text()
-            val href = it.attr("href")
-            Episode(name = name, data = href)
+            val href = fixUrl(it.attr("href"))
+            newEpisode(href) {
+                name = it.text()
+            }
         }
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             posterUrl = fixUrlNull(document.selectFirst(".hl-dc-pic span")?.attr("data-original"))
-            year = document.select(".hl-full-box ul li").getOrNull(4)?.text()?.toIntOrNull()
+            year = (document.select(".hl-full-box ul li").getOrNull(4)
+                ?.childNode(1) as TextNode).wholeText.toIntOrNull()
+            plot = (document.select(".hl-full-box ul li").lastOrNull()
+                ?.childNode(1) as TextNode).wholeText
         }
     }
 
