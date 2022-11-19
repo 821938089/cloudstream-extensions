@@ -2,11 +2,9 @@ package com.horis.cloudstreamplugins
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.cloudstreamplugins.LoadRule
 import com.lagradost.cloudstream3.utils.AppUtils
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.M3u8Helper
-import com.lagradost.nicehttp.NiceResponse
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.nodes.Element
