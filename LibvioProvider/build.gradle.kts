@@ -1,6 +1,5 @@
 // use an integer for version numbers
-version = 2
-
+version = 3
 
 
 cloudstream {
@@ -25,8 +24,4 @@ cloudstream {
     tvTypes = listOf("Movie", "AnimeMovie", "TvSeries", "Anime", "AsianDrama", "Others")
 
     iconUrl = "https://www.google.com/s2/favicons?domain=www.libvio.me&sz=%size%"
-}
-
-dependencies {
-    implementation(project(mapOf("path" to ":BaseProvider")))
 }

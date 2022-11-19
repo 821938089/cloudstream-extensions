@@ -14,6 +14,15 @@ import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 
 class OulevodProvider : BaseProvider() {
+    override val supportedTypes = setOf(
+        TvType.Movie,
+        TvType.AnimeMovie,
+        TvType.TvSeries,
+        TvType.Anime,
+        TvType.AsianDrama,
+        TvType.Others
+    )
+    override var lang = "zh"
 
     override var mainUrl = "https://www.oulevod.tv"
     override var name = "欧乐影院"
@@ -27,54 +36,56 @@ class OulevodProvider : BaseProvider() {
         "${mainUrl}/index.php/vod/show/id/4" to "综艺",
     )
 
-    override val mainPageRule = MainPageRule(
-        list = "@html:ul.hl-vod-list.clearfix > li",
-        url = "@html:a@href",
-        name = "@html:.hl-item-text a@text",
-        posterUrl = "@html:a@data-original"
-    )
-
-    override val searchRule = SearchRule(
-        list = "@html:ul.hl-one-list li",
-        url = "@html:.hl-item-title a@text",
-        name = "@html:.hl-item-title a@href",
-        posterUrl = "@html:a.hl-item-thumb@data-original"
-    )
-
-    override val loadRule = object : LoadRule(
-        name = "@html:.hl-dc-title@text",
-        posterUrl = "@html:.hl-dc-pic span@data-original",
-        episodeList = "@html:.hl-tabs-box li a",
-        episodeName = "@html:a@text",
-        episodeUrl = "@html:a@href"
-    ) {
-        override fun getYear(year: String?, res: NiceResponse): String? {
-            return (res.document.select(".hl-full-box ul li").getOrNull(4)
-                ?.childNode(1) as TextNode).wholeText
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
+        val url = request.data
+        val document = app.get(url).document
+        val items = document.select("ul.hl-vod-list.clearfix > li").mapNotNull {
+            it.toSearchResult()
         }
 
-        override fun getPlot(plot: String?, res: NiceResponse): String? {
-            return (res.document.select(".hl-full-box ul li").lastOrNull()
-                ?.childNode(1) as TextNode).wholeText
+        return newHomePageResponse(request.name, items)
+    }
+
+    private fun Element.toSearchResult(): SearchResponse? {
+        val title = selectFirst(".hl-item-text")?.text()?.trim() ?: return null
+        val href = fixUrl(selectFirst("a")?.attr("href").toString())
+        val posterUrl = fixUrlNull(selectFirst("a")?.attr("data-original"))
+
+        return newAnimeSearchResponse(title, href, TvType.Movie) {
+            this.posterUrl = posterUrl
         }
     }
 
-    override suspend fun fetchMainPage(page: Int, request: MainPageRequest): NiceResponse {
-        val url = if (page < 1) {
-            "${request.data}.html"
-        } else {
-            "${request.data}/page/$page.html"
+
+    override suspend fun search(query: String): List<SearchResponse> {
+        val document = app.get("$mainUrl/index.php/vod/search.html?wd=$query&submit=").document
+        val items = document.select("ul.hl-one-list").mapNotNull {
+            val name = it.selectFirst(".hl-item-content a")?.text()?.trim()
+                ?: return@mapNotNull null
+            val url = it.selectFirst("a")?.attr("href")
+                ?: return@mapNotNull null
+            newMovieSearchResponse(name, url)
         }
-        return app.get(url, referer = "$mainUrl/")
+        return items
     }
 
-    override suspend fun fetchSearch(query: String): NiceResponse {
-        val url = "$mainUrl/index.php/vod/search.html?wd=$query&submit="
-        return app.get(url, referer = "$mainUrl/")
-    }
-
-    override suspend fun fetchLoad(url: String): NiceResponse {
-        return app.get(url, referer = "$mainUrl/")
+    override suspend fun load(url: String): LoadResponse? {
+        val document = app.get(url).document
+        val title = document.selectFirst(".hl-dc-title")?.text()?.trim() ?: return null
+//        val tvType = if (document.selectFirst(".hl-text-conch.active")?.text() == "电影") {
+//            TvType.Movie
+//        } else {
+//            TvType.TvSeries
+//        }
+        val episodes = document.select(".hl-tabs-box a").map {
+            val name = it.text()
+            val href = it.attr("href")
+            Episode(name = name, data = href)
+        }
+        return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
+            posterUrl = fixUrlNull(document.selectFirst("hl-dc-pic")?.attr("data-original"))
+            year = document.select(".hl-full-box ul li").getOrNull(4)?.text()?.toIntOrNull()
+        }
     }
 
     override suspend fun loadLinks(
