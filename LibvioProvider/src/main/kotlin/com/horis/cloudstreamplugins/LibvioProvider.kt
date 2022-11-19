@@ -137,3 +137,7 @@ class LibvioProvider : MainAPI() {
         @JsonProperty("from") val from: String?
     )
 }
+
+fun String.substring(left: String, right: String): String {
+    return substringAfter(left).substringBefore(right)
+}
