@@ -70,14 +70,19 @@ class LibvioProvider : MainAPI() {
         val doc = app.get(url, referer = "$mainUrl/").document
         val name = doc.selectFirst(".title a")?.text() ?: return null
         val episodes = ArrayList<Episode>()
-        for (it in doc.select(".stui-vodlist__head")) {
+        val routeNames = ArrayList<SeasonData>()
+        for ((index, it) in doc.select(".stui-vodlist__head").withIndex()) {
             val route = it.selectFirst("h3")?.text() ?: continue
             if (route == "猜你喜欢") continue
+            routeNames.add(SeasonData(index + 1, route))
             for (ep in it.select(".stui-content__playlist a")) {
-                val episodeUrl = ep.selectFirst("a")?.attr("href") ?: continue
-                episodes.add(newEpisode(episodeUrl) {
-                    this.name = ep.selectFirst("a")!!.text()
-                })
+                val episodeUrl = ep.attr("href") ?: continue
+                episodes.add(
+                    newEpisode(episodeUrl) {
+                        this.name = ep.selectFirst("a")!!.text()
+                        season = index + 1
+                    }
+                )
             }
         }
         return newTvSeriesLoadResponse(name, url, TvType.TvSeries, episodes) {
@@ -86,6 +91,7 @@ class LibvioProvider : MainAPI() {
             }
             plot = doc.selectFirst(".detail-content")?.text()
             posterUrl = doc.selectFirst(".stui-content__thumb img")?.attr("data-original")
+            seasonNames = routeNames
         }
     }
 
