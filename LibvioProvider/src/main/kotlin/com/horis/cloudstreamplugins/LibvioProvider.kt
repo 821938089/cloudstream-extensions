@@ -20,7 +20,7 @@ class LibvioProvider : MainAPI() {
     )
     override var lang = "zh"
 
-    override var mainUrl = "https://www.libvio.me"
+    override var mainUrl = "https://libvio.fun"
     override var name = "LIBVIO"
 
     override val hasMainPage = true
