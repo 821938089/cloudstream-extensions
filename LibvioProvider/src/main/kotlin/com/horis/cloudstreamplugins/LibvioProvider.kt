@@ -75,6 +75,8 @@ class LibvioProvider : MainAPI() {
         for ((index, it) in doc.select(".stui-vodlist__head").withIndex()) {
             val route = it.selectFirst("h3")?.text() ?: continue
             if (route == "猜你喜欢") continue
+            if (route == "LINE100") continue
+            if (route.contains("网盘")) continue
             routeNames.add(SeasonData(index + 1, route))
             for (ep in it.select(".stui-content__playlist a")) {
                 val episodeUrl = ep.attr("href") ?: continue
