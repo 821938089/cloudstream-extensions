@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.AppUtils
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.M3u8Helper
+import com.lagradost.cloudstream3.utils.Qualities
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.jsoup.nodes.Element
@@ -119,8 +120,12 @@ class LibvioProvider : MainAPI() {
                     referer = "$mainUrl/"
                 ).text
                 val m3u8Url = html.substring("var urls = '", "';")
-                M3u8Helper.generateM3u8(name, m3u8Url, "")
-                    .forEach(callback)
+                if (m3u8Url.indexOf(".m3u8") > -1) {
+                    M3u8Helper.generateM3u8(name, m3u8Url, "")
+                        .forEach(callback)
+                } else {
+                    callback(ExtractorLink(name, name, m3u8Url, "", Qualities.Unknown.value))
+                }
             }
         }
         return true
