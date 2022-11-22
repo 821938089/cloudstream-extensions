@@ -2,8 +2,11 @@ package com.horis.cloudstreamplugins
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
+import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
+import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.M3u8Helper
 import com.lagradost.nicehttp.NiceResponse
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -59,7 +62,7 @@ abstract class UAPIProvider : MainAPI() {
 
     private suspend fun getSingleMainPage(page: Int, typeId: Int, name: String): HomePageList {
         val vodList =
-            fetchApi("$mainUrl/provide/vod/?ac=list&t=${typeId}&pg=$page")
+            fetchApi("$mainUrl/provide/vod/?ac=detail&t=${typeId}&pg=$page")
                 .parsedSafe<VodList>()?.list ?: throw ErrorLoadingException("获取主页数据失败")
         val homeList = ArrayList<SearchResponse>()
         for (vod in vodList) {
@@ -69,6 +72,54 @@ abstract class UAPIProvider : MainAPI() {
             })
         }
         return HomePageList(name, homeList)
+    }
+
+    override suspend fun search(query: String): List<SearchResponse>? {
+        val vodList =
+            fetchApi("$mainUrl/provide/vod/?ac=detail&wd=$query")
+                .parsedSafe<VodList>()?.list ?: throw ErrorLoadingException("获取搜索数据失败")
+        return vodList.mapNotNull {
+            it.name ?: return@mapNotNull null
+            newTvSeriesSearchResponse(it.name, it.toJson()) {
+                posterUrl = it.pic
+            }
+        }
+    }
+
+    override suspend fun load(url: String): LoadResponse? {
+        val vod = parseJson<Vod>(url)
+        vod.name ?: return null
+        val episodes = ArrayList<Episode>()
+        val serverNames = ArrayList<SeasonData>()
+        val servers = vod.playServer!!.split("$$$")
+
+        for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
+            serverNames.add(SeasonData(index + 1, servers[index]))
+            for (playInfo in vodPlayList.split("#")) {
+                val (episodeName, playUrl) = playInfo.split("$")
+                episodes.add(newEpisode("${servers[index]}$$playUrl") {
+                    name = episodeName
+                })
+            }
+        }
+
+        return newTvSeriesLoadResponse(vod.name, url, TvType.TvSeries, episodes) {
+            seasonNames = serverNames
+        }
+    }
+
+    override suspend fun loadLinks(
+        data: String,
+        isCasting: Boolean,
+        subtitleCallback: (SubtitleFile) -> Unit,
+        callback: (ExtractorLink) -> Unit
+    ): Boolean {
+        val (serverName, playUrl) = data.split("$")
+        if (!serverName.contains("m3u8")) {
+            throw ErrorLoadingException("请在浏览器中打开链接")
+        }
+        M3u8Helper.generateM3u8(name, playUrl, "", name = serverName).forEach(callback)
+        return true
     }
 
     override fun getVideoInterceptor(extractorLink: ExtractorLink): Interceptor {
@@ -102,6 +153,7 @@ abstract class UAPIProvider : MainAPI() {
         @JsonProperty("vod_play_from") val playFrom: String? = null,
         @JsonProperty("vod_play_server") val playServer: String? = null,
         @JsonProperty("vod_play_note") val playNote: String? = null,
+        @JsonProperty("vod_play_url") val playUrl: String? = null,
         @JsonProperty("type_name") val typeName: String? = null,
     )
 
