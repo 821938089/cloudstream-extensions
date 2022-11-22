@@ -108,6 +108,9 @@ abstract class UAPIProvider : MainAPI() {
             posterUrl = vod.pic
             plot = vod.blurb
             year = vod.year?.toInt()
+            if (vod.actor!!.isNotBlank()) {
+                actors = vod.actor.split(",").map { ActorData(Actor(it)) }
+            }
             tags = arrayListOf(vod.area!!, vod.lang!!, vod.typeName!!, vod.time!!, vod.remarks!!)
         }
     }
