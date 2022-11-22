@@ -64,7 +64,9 @@ abstract class UAPIProvider : MainAPI() {
         val homeList = ArrayList<SearchResponse>()
         for (vod in vodList) {
             vod.name ?: continue
-            homeList.add(newMovieSearchResponse(name, vod.toJson()))
+            homeList.add(newMovieSearchResponse(vod.name, vod.toJson()) {
+                posterUrl = vod.pic
+            })
         }
         return HomePageList(name, homeList)
     }
