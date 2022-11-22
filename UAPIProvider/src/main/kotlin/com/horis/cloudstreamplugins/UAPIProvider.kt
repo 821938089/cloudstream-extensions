@@ -1,19 +1,12 @@
 package com.horis.cloudstreamplugins
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.core.json.JsonReadFeature
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.nicehttp.NiceResponse
-import com.lagradost.nicehttp.Requests
-import com.lagradost.nicehttp.ResponseParser
 import okhttp3.Interceptor
 import okhttp3.Response
-import kotlin.reflect.KClass
 
 abstract class UAPIProvider : MainAPI() {
 
