@@ -9,5 +9,7 @@ class UAPIPlugin: Plugin() {
     override fun load(context: Context) {
         // All providers should be added in this manner. Please don't edit the providers list directly.
         registerMainAPI(BdzyProvider())
+        registerMainAPI(TiankongProvider())
+        registerMainAPI(KczyProvider())
     }
 }
