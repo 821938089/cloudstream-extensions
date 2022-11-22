@@ -95,8 +95,8 @@ abstract class UAPIProvider : MainAPI() {
 
         for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
             serverNames.add(SeasonData(index + 1, servers[index]))
-            for (playInfo in vodPlayList.split("#")) {
-                val (episodeName, playUrl) = playInfo.split("$")
+            for ((episodeName, playInfo) in vodPlayList.split("$").chunked(2)) {
+                val playUrl = playInfo.split("#")[0]
                 episodes.add(newEpisode("${servers[index]}$$playUrl") {
                     name = episodeName
                 })
@@ -105,6 +105,10 @@ abstract class UAPIProvider : MainAPI() {
 
         return newTvSeriesLoadResponse(vod.name, url, TvType.TvSeries, episodes) {
             seasonNames = serverNames
+            posterUrl = vod.pic
+            plot = vod.blurb
+            year = vod.year?.toInt()
+            tags = arrayListOf(vod.area!!, vod.lang!!, vod.typeName!!, vod.time!!, vod.remarks!!)
         }
     }
 
