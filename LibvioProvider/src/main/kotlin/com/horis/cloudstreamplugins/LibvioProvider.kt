@@ -122,11 +122,12 @@ class LibvioProvider : MainAPI() {
                     referer = "$mainUrl/"
                 ).text
                 val m3u8Url = html.substring("var urls = '", "';")
+                if (m3u8Url.isBlank()) return false
                 if (m3u8Url.indexOf(".m3u8") > -1) {
-                    M3u8Helper.generateM3u8(name, m3u8Url, "")
+                    M3u8Helper.generateM3u8(name, m3u8Url, "", name = playData.from!!)
                         .forEach(callback)
                 } else {
-                    callback(ExtractorLink(name, name, m3u8Url, "", Qualities.Unknown.value))
+                    callback(ExtractorLink(name, playData.from!!, m3u8Url, "", Qualities.Unknown.value))
                 }
             }
         }
