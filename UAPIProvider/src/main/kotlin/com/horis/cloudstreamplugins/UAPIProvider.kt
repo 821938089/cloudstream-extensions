@@ -91,7 +91,7 @@ abstract class UAPIProvider : MainAPI() {
         vod.name ?: return null
         val episodes = ArrayList<Episode>()
         val serverNames = ArrayList<SeasonData>()
-        val servers = vod.playServer!!.split("$$$")
+        val servers = vod.playFrom!!.split("$$$")
 
         for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
             serverNames.add(SeasonData(index + 1, servers[index]))
