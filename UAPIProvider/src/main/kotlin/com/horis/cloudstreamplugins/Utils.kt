@@ -12,7 +12,7 @@ val app = Requests(responseParser = object : ResponseParser {
     val mapper: ObjectMapper = jacksonObjectMapper().configure(
         DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false
     ).configure(
-        JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), false
+        JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true
     )
 
     override fun <T : Any> parse(text: String, kClass: KClass<T>): T {
