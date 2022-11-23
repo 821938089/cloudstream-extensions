@@ -11,5 +11,11 @@ class UAPIPlugin: Plugin() {
         registerMainAPI(BdzyProvider())
         registerMainAPI(TiankongProvider())
         registerMainAPI(KczyProvider())
+        registerMainAPI(Zyk1080Provider())
+        registerMainAPI(KudianProvider())
+        registerMainAPI(Kudian2Provider())
+        registerMainAPI(KuaijingjiProvider())
+        registerMainAPI(FoxProvider())
+        registerMainAPI(LiangziProvider())
     }
 }
