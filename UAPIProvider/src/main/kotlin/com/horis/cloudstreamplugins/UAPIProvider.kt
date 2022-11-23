@@ -1,21 +1,23 @@
 package com.horis.cloudstreamplugins
 
+import android.util.Log
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
-import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
-import com.lagradost.cloudstream3.utils.M3u8Helper
+import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.nicehttp.NiceResponse
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.net.URLEncoder
 
 abstract class UAPIProvider : MainAPI() {
 
     companion object {
         const val UserAgent =
             "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36"
+        const val TAG = "UAPIProvider"
     }
 
     override val supportedTypes = setOf(
@@ -30,53 +32,53 @@ abstract class UAPIProvider : MainAPI() {
     override var lang = "zh"
     override val hasMainPage = true
 
-    var categoryCache: ArrayList<Category>? = null
+    var categoryCache: List<Category>? = null
 
-    private suspend fun getCategory(): ArrayList<Category> {
+    private suspend fun getCategory(): List<Category> {
         categoryCache?.let { return it }
-        categoryCache = fetchApi("$mainUrl/provide/vod/?ac=list").parsedSafe<CategoryList>()?.list
+        categoryCache =
+            fetchApi("$mainUrl/provide/vod/?ac=list").parsedSafe<CategoryList>()?.list?.take(8)
         return categoryCache ?: throw ErrorLoadingException("获取分类数据失败")
     }
 
     private suspend fun fetchApi(url: String): NiceResponse {
+        var retry = 2
+        while (retry-- > 0) {
+            try {
+                return app.get(url, referer = url, verify = false)
+            } catch (_: Exception) {
+            }
+        }
         return app.get(url, referer = url, verify = false)
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         val category = getCategory()
-        val pages = if (request.name == "") {
-            category.amap {
-                getSingleMainPage(page, it.typeId, it.typeName)
+
+        var pages = category.amap {
+            val vodList =
+                fetchApi("$mainUrl/provide/vod/?ac=detail&t=${it.typeId}&pg=$page")
+                    .parsedSafe<VodList>()?.list ?: throw ErrorLoadingException("获取主页数据失败")
+            val homeList = ArrayList<SearchResponse>()
+            for (vod in vodList) {
+                vod.name ?: continue
+                homeList.add(newMovieSearchResponse(vod.name, vod.toJson()) {
+                    posterUrl = vod.pic
+                })
             }
-        } else {
-            arrayListOf(getSingleMainPage(page, request.name))
+            HomePageList(it.typeName, homeList)
         }
-        return HomePageResponse(pages, true)
-    }
-
-    private suspend fun getSingleMainPage(page: Int, name: String): HomePageList {
-        val category = getCategory()
-        val typeId = category.find { it.typeName == name }!!.typeId
-        return getSingleMainPage(page, typeId, name)
-    }
-
-    private suspend fun getSingleMainPage(page: Int, typeId: Int, name: String): HomePageList {
-        val vodList =
-            fetchApi("$mainUrl/provide/vod/?ac=detail&t=${typeId}&pg=$page")
-                .parsedSafe<VodList>()?.list ?: throw ErrorLoadingException("获取主页数据失败")
-        val homeList = ArrayList<SearchResponse>()
-        for (vod in vodList) {
-            vod.name ?: continue
-            homeList.add(newMovieSearchResponse(vod.name, vod.toJson()) {
-                posterUrl = vod.pic
-            })
+        if (page == 1) {
+            pages = pages.filter { it.list.isNotEmpty() }
         }
-        return HomePageList(name, homeList)
+        return HomePageResponse(pages, pages.any { it.list.isNotEmpty() })
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun search(query: String): List<SearchResponse>? {
+        val encodeQuery = URLEncoder.encode(query, "utf-8")
         val vodList =
-            fetchApi("$mainUrl/provide/vod/?ac=detail&wd=$query")
+            fetchApi("$mainUrl/provide/vod/?ac=detail&wd=$encodeQuery")
                 .parsedSafe<VodList>()?.list ?: throw ErrorLoadingException("获取搜索数据失败")
         return vodList.mapNotNull {
             it.name ?: return@mapNotNull null
@@ -95,10 +97,12 @@ abstract class UAPIProvider : MainAPI() {
 
         for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
             serverNames.add(SeasonData(index + 1, servers[index]))
-            for ((episodeName, playInfo) in vodPlayList.split("$").chunked(2)) {
-                val playUrl = playInfo.split("#")[0]
-                episodes.add(newEpisode("${servers[index]}$$playUrl") {
+            for (playInfo in vodPlayList.trimEnd('#').split("#")) {
+                val (episodeName, playUrl) = playInfo.split("$")
+                val data = PlayData(servers[index], playUrl).toJson()
+                episodes.add(newEpisode(data) {
                     name = episodeName
+                    season = index + 1
                 })
             }
         }
@@ -106,12 +110,17 @@ abstract class UAPIProvider : MainAPI() {
         return newTvSeriesLoadResponse(vod.name, url, TvType.TvSeries, episodes) {
             seasonNames = serverNames
             posterUrl = vod.pic
-            plot = vod.blurb
+            plot = vod.blurb ?: vod.content
             year = vod.year?.toInt()
             if (vod.actor!!.isNotBlank()) {
                 actors = vod.actor.split(",").map { ActorData(Actor(it)) }
             }
-            tags = arrayListOf(vod.area!!, vod.lang!!, vod.typeName!!, vod.time!!, vod.remarks!!)
+            tags = arrayListOf(
+                vod.area!!,
+                vod.lang!!,
+                vod.typeName!!,
+                vod.remarks!!
+            ).filter { it.isNotBlank() }
         }
     }
 
@@ -121,11 +130,17 @@ abstract class UAPIProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val (serverName, playUrl) = data.split("$")
-        if (!serverName.contains("m3u8")) {
-            throw ErrorLoadingException("请在浏览器中打开链接")
-        }
-        M3u8Helper.generateM3u8(name, playUrl, "", name = serverName).forEach(callback)
+        val playData = parseJson<PlayData>(data)
+        callback(
+            ExtractorLink(
+                name,
+                playData.server,
+                playData.url,
+                "",
+                Qualities.Unknown.value,
+                true
+            )
+        )
         return true
     }
 
@@ -136,6 +151,11 @@ abstract class UAPIProvider : MainAPI() {
             }
         }
     }
+
+    data class PlayData(
+        val server: String,
+        val url: String
+    )
 
     data class VodList(
         @JsonProperty("list") val list: ArrayList<Vod>
