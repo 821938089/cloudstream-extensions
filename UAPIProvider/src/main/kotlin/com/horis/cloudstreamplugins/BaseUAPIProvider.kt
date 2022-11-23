@@ -72,9 +72,13 @@ abstract class BaseUAPIProvider : MainAPI() {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun search(query: String): List<SearchResponse>? {
-        val encodeQuery = URLEncoder.encode(query, "utf-8")
-        val vodList = getVodList("$mainUrl?ac=videolist&wd=$encodeQuery")
-            ?: throw ErrorLoadingException("获取搜索数据失败")
+        val vodList = if (query.split(",").all { it.toIntOrNull() != null }) {
+            getVodList("$mainUrl?ac=videolist&ids=$query")
+        } else {
+            val encodeQuery = URLEncoder.encode(query, "utf-8")
+            getVodList("$mainUrl?ac=videolist&wd=$encodeQuery")
+        }
+        vodList ?: throw ErrorLoadingException("获取搜索数据失败")
         return vodList.mapNotNull {
             it.name ?: return@mapNotNull null
             newTvSeriesSearchResponse(it.name, it.toJson()) {
