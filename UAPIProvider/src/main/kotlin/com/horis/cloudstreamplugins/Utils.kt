@@ -31,5 +31,5 @@ val app = Requests(responseParser = object : ResponseParser {
         return mapper.writeValueAsString(obj)
     }
 }).apply {
-    defaultHeaders = mapOf("User-Agent" to UAPIProvider.UserAgent)
+    defaultHeaders = mapOf("User-Agent" to BaseUAPIProvider.UserAgent)
 }
