@@ -32,5 +32,6 @@ class UAPIPlugin: Plugin() {
         registerMainAPI(YangguangProvider())
         registerMainAPI(XinghaiProvider())
         registerMainAPI(HaiwaikanProvider())
+        registerMainAPI(IkunProvider())
     }
 }
