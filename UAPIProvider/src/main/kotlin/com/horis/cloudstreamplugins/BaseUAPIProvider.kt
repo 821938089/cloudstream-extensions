@@ -91,11 +91,11 @@ abstract class BaseUAPIProvider : MainAPI() {
         val servers = vod.playFrom!!.split("$$$")
 
         for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
-            if (playFromFilter.isNotEmpty() &&
-                !playFromFilter.any { servers[index].contains(it) }
-            ) {
-                continue
-            }
+//            if (playFromFilter.isNotEmpty() &&
+//                !playFromFilter.any { servers[index].contains(it) }
+//            ) {
+//                continue
+//            }
             serverNames.add(SeasonData(index + 1, servers[index]))
             for (playInfo in vodPlayList.trimEnd('#').split("#")) {
                 val (episodeName, playUrl) = playInfo.split("$")
