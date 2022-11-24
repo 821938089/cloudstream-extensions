@@ -1,11 +1,14 @@
 package com.horis.cloudstreamplugins
 
+import android.app.Activity
 import com.fasterxml.jackson.core.json.JsonReadFeature
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.lagradost.cloudstream3.CommonActivity
 import com.lagradost.nicehttp.Requests
 import com.lagradost.nicehttp.ResponseParser
+import java.lang.ref.WeakReference
 import kotlin.reflect.KClass
 
 val app = Requests(responseParser = object : ResponseParser {
@@ -32,4 +35,12 @@ val app = Requests(responseParser = object : ResponseParser {
     }
 }).apply {
     defaultHeaders = mapOf("User-Agent" to BaseUAPIProvider.UserAgent)
+}
+
+var activityRef : WeakReference<Activity>? = null
+val activity get() = activityRef?.get()
+
+fun showToast(message: String, duration: Int? = null) {
+    val activity = activity ?: return
+    CommonActivity.showToast(activity, message, duration)
 }
