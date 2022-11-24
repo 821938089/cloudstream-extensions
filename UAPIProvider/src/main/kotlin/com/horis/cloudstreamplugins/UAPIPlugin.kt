@@ -1,14 +1,17 @@
 package com.horis.cloudstreamplugins
 
+import android.app.Activity
 import com.lagradost.cloudstream3.plugins.CloudstreamPlugin
 import com.lagradost.cloudstream3.plugins.Plugin
 import android.content.Context
+import java.lang.ref.WeakReference
 
 @Suppress("unused")
 @CloudstreamPlugin
 class UAPIPlugin: Plugin() {
     override fun load(context: Context) {
         // All providers should be added in this manner. Please don't edit the providers list directly.
+        activityRef = WeakReference(context as Activity)
         registerMainAPI(BdzyProvider())
         registerMainAPI(TiankongProvider())
         registerMainAPI(KczyProvider())
@@ -33,5 +36,7 @@ class UAPIPlugin: Plugin() {
         registerMainAPI(XinghaiProvider())
         registerMainAPI(HaiwaikanProvider())
         registerMainAPI(IkunProvider())
+        registerMainAPI(YinghuaProvider())
+        registerMainAPI(JinyingProvider())
     }
 }
