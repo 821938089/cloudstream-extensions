@@ -6,16 +6,13 @@ import com.lagradost.cloudstream3.utils.AppUtils
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
-import com.lagradost.nicehttp.NiceResponse
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.net.URLEncoder
 
-abstract class BaseUAPIProvider : MainAPI() {
+abstract class BaseVodProvider : MainAPI() {
+
     companion object {
-        const val UserAgent =
-            "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36"
-        const val TAG = "UAPIProvider"
+        const val TAG = "BaseVodProvider"
     }
 
     override val supportedTypes = setOf(
@@ -30,34 +27,20 @@ abstract class BaseUAPIProvider : MainAPI() {
     override var lang = "zh"
     override val hasMainPage = true
 
+    open val apiExtractor by lazy { makeApiExtractor(mainUrl) }
     open val playFromFilter = hashSetOf("m3u8")
-
-    var categoryCache: List<Category>? = null
-
-    abstract suspend fun getCategory(): List<Category>
-
-    abstract suspend fun getVodList(url: String): List<Vod>?
-
-    suspend fun fetchApi(url: String): NiceResponse {
-        var retry = 2
-        while (retry-- > 0) {
-            try {
-                return app.get(url, referer = url, verify = false)
-            } catch (_: Exception) {
-            }
-        }
-        return app.get(url, referer = url, verify = false)
-    }
+    open val headers = mapOf<String, String>()
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
-        val category = getCategory()
+        val category = apiExtractor.getCategory()
 
         var pages = category.amap {
-            val vodList = getVodList("$mainUrl?ac=videolist&t=${it.typeId}&pg=$page")
+            val vodList = apiExtractor.getVodListDetail(type = it.typeId.toString(), page = page)
                 ?: throw ErrorLoadingException("获取主页数据失败")
             val homeList = ArrayList<SearchResponse>()
             for (vod in vodList) {
                 vod.name ?: continue
+                Log.d(TAG, vod.pic.toString())
                 homeList.add(newMovieSearchResponse(vod.name, vod.toJson()) {
                     posterUrl = vod.pic
                 })
@@ -73,10 +56,9 @@ abstract class BaseUAPIProvider : MainAPI() {
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun search(query: String): List<SearchResponse>? {
         val vodList = if (query.split(",").all { it.toIntOrNull() != null }) {
-            getVodList("$mainUrl?ac=videolist&ids=$query")
+            apiExtractor.getVodListDetail(ids = query)
         } else {
-            val encodeQuery = URLEncoder.encode(query, "utf-8")
-            getVodList("$mainUrl?ac=videolist&wd=$encodeQuery")
+            apiExtractor.getVodListDetail(query)
         }
         vodList ?: throw ErrorLoadingException("获取搜索数据失败")
         return vodList.mapNotNull {
@@ -94,7 +76,7 @@ abstract class BaseUAPIProvider : MainAPI() {
         val serverNames = ArrayList<SeasonData>()
         val servers = vod.playFrom!!.split("$$$")
 
-        for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
+        loop@ for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
 //            if (playFromFilter.isNotEmpty() &&
 //                !playFromFilter.any { servers[index].contains(it) }
 //            ) {
@@ -103,6 +85,10 @@ abstract class BaseUAPIProvider : MainAPI() {
             serverNames.add(SeasonData(index + 1, servers[index]))
             for (playInfo in vodPlayList.trimEnd('#').split("#")) {
                 val (episodeName, playUrl) = playInfo.split("$")
+                if (!playInfo.endsWith(".m3u8")) {
+                    serverNames.removeLast()
+                    continue@loop
+                }
                 val data = PlayData(servers[index], playUrl).toJson()
                 episodes.add(newEpisode(data) {
                     name = episodeName
@@ -154,7 +140,17 @@ abstract class BaseUAPIProvider : MainAPI() {
     override fun getVideoInterceptor(extractorLink: ExtractorLink): Interceptor {
         return object : Interceptor {
             override fun intercept(chain: Interceptor.Chain): Response {
-                return chain.proceed(chain.request().newBuilder().removeHeader("referer").build())
+                val request = chain.request().newBuilder().run {
+                    removeHeader("referer")
+//                    removeHeader("Accept-Encoding")
+//                    headers.forEach { (k, _) ->
+//                        if (k.startsWith("sec-")) {
+//                            removeHeader(k)
+//                        }
+//                    }
+                    build()
+                }
+                return chain.proceed(request)
             }
         }
     }
