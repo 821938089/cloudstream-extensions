@@ -95,7 +95,7 @@ abstract class BaseUAPIProvider : MainAPI() {
         val serverNames = ArrayList<SeasonData>()
         val servers = vod.playFrom!!.split("$$$")
 
-        for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
+        loop@ for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
 //            if (playFromFilter.isNotEmpty() &&
 //                !playFromFilter.any { servers[index].contains(it) }
 //            ) {
@@ -104,6 +104,10 @@ abstract class BaseUAPIProvider : MainAPI() {
             serverNames.add(SeasonData(index + 1, servers[index]))
             for (playInfo in vodPlayList.trimEnd('#').split("#")) {
                 val (episodeName, playUrl) = playInfo.split("$")
+                if (!playInfo.endsWith(".m3u8")) {
+                    serverNames.removeLast()
+                    continue@loop
+                }
                 val data = PlayData(servers[index], playUrl).toJson()
                 episodes.add(newEpisode(data) {
                     name = episodeName
@@ -136,9 +140,6 @@ abstract class BaseUAPIProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val playData = AppUtils.parseJson<PlayData>(data)
-        if (!playData.url.endsWith(".m3u8")) {
-            showToast("请在浏览器内打开链接。")
-        }
         callback(
             ExtractorLink(
                 name,

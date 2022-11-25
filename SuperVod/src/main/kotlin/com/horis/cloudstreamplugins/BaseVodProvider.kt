@@ -121,9 +121,6 @@ abstract class BaseVodProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val playData = AppUtils.parseJson<PlayData>(data)
-        if (!playData.url.endsWith(".m3u8")) {
-            showToast("请在浏览器内打开链接。")
-        }
         callback(
             ExtractorLink(
                 name,
