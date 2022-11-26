@@ -13,12 +13,14 @@ abstract class BaseVodProvider : MainAPI() {
 
     companion object {
         const val TAG = "BaseVodProvider"
+        val nsfwCategory = listOf("伦理")
     }
 
     override val supportedTypes = setOf(
         TvType.Movie,
         TvType.AnimeMovie,
         TvType.TvSeries,
+        TvType.Cartoon,
         TvType.Anime,
         TvType.AsianDrama,
         TvType.Documentary,
@@ -26,31 +28,51 @@ abstract class BaseVodProvider : MainAPI() {
     )
     override var lang = "zh"
     override val hasMainPage = true
+    override val mainPage = mutableListOf(MainPageData("", ""))
 
     open val apiExtractor by lazy { makeApiExtractor(mainUrl) }
     open val playFromFilter = hashSetOf("m3u8")
     open val headers = mapOf<String, String>()
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
-        val category = apiExtractor.getCategory()
-
-        var pages = category.amap {
-            val vodList = apiExtractor.getVodListDetail(type = it.typeId.toString(), page = page)
-                ?: throw ErrorLoadingException("获取主页数据失败")
-            val homeList = ArrayList<SearchResponse>()
-            for (vod in vodList) {
-                vod.name ?: continue
-                Log.d(TAG, vod.pic.toString())
-                homeList.add(newMovieSearchResponse(vod.name, vod.toJson()) {
-                    posterUrl = vod.pic
-                })
+        val categoryList = apiExtractor.getCategory().filter { cat ->
+            nsfwCategory.any { !cat.typeName.contains(it) }
+        }
+        if (mainPage.first().name.isEmpty()) {
+            makeMainPage(categoryList)
+        }
+        var pages = if (request.name.isNotEmpty()) {
+            listOf(getSingleMainPage(page, request.name, request.data))
+        } else {
+            categoryList.amap {
+                getSingleMainPage(page, it.typeName, it.typeId.toString())
             }
-            HomePageList(it.typeName, homeList)
         }
         if (page == 1) {
             pages = pages.filter { it.list.isNotEmpty() }
         }
         return HomePageResponse(pages, pages.any { it.list.isNotEmpty() })
+    }
+
+    private fun makeMainPage(categoryList: List<Category>) {
+        mainPage.clear()
+        categoryList.forEach {
+            mainPage.add(MainPageData(it.typeName, it.typeId.toString()))
+        }
+    }
+
+    private suspend fun getSingleMainPage(page: Int, name: String, type: String): HomePageList {
+        val pageSize = if (page == 1) 10 else null
+        val vodList = apiExtractor.getVodListDetail(type = type, page = page, pageSize = pageSize)
+            ?: throw ErrorLoadingException("获取主页数据失败")
+        val homeList = ArrayList<SearchResponse>()
+        for (vod in vodList) {
+            vod.name ?: continue
+            homeList.add(newMovieSearchResponse(vod.name, vod.toJson()) {
+                posterUrl = vod.pic
+            })
+        }
+        return HomePageList(name, homeList)
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")

@@ -13,59 +13,61 @@ class SuperVodPlugin : Plugin() {
         // All providers should be added in this manner. Please don't edit the providers list directly.
         activityRef = WeakReference(context as Activity)
         // dbyun,dbm3u8
-        addVodSource("百度影视", "https://api.apibdzy.com/api.php/provide/vod/")
+        addVodSource("百度影视", "https://api.apibdzy.com/api.php/provide/vod/from/dbm3u8/")
         // tkyun,tkm3u8
-        addVodSource("天空影视", "https://api.tiankongapi.com/api.php/provide/vod/")
+        addVodSource("天空影视", "https://api.tiankongapi.com/api.php/provide/vod/from/tkm3u8/")
         // kcyun,kcm3u8
-        addVodSource("快车影视", "https://caiji.kczyapi.com/api.php/provide/vod/")
+        addVodSource("快车影视", "https://caiji.kczyapi.com/api.php/provide/vod/from/kcm3u8/")
         // 1080zyk
         addVodSource("优质影视", "https://api.1080zyku.com/inc/apijson.php/provide/vod/")
         // kdyun,kdm3u8
-        addVodSource("酷点影视", "https://kudian10.com/api.php/provide/vod/")
-        addVodSource("酷点影视2", "https://api.kuapi.cc/api.php/provide/vod/")
+        addVodSource("酷点影视", "https://kudian10.com/api.php/provide/vod/from/kdm3u8/")
+        addVodSource("酷点影视2", "https://api.kuapi.cc/api.php/provide/vod/from/kdm3u8/")
         // kjj,kuaiyun
-        addVodSource("快竞技", "https://api.kjjapi.com/api.php/provide/vod/")
+        addVodSource("快竞技", "https://api.kjjapi.com/api.php/provide/vod/from/kjj/")
         // foxyun,foxm3u8
-        addVodSource("Fox影视", "https://api.foxzyapi.com/api.php/provide/vod/")
+        addVodSource("Fox影视", "https://api.foxzyapi.com/api.php/provide/vod/from/foxm3u8/")
         // liangzi,lzm3u8
-        addVodSource("量子影视", "https://cj.lziapi.com/api.php/provide/vod/")
+        addVodSource("量子影视", "https://cj.lziapi.com/api.php/provide/vod/from/lzm3u8/")
         // fsyun,fsm3u8
-        addVodSource("飞速影视", "https://www.feisuzyapi.com/api.php/provide/vod/")
+        addVodSource("飞速影视", "https://www.feisuzyapi.com/api.php/provide/vod/from/fsm3u8/")
         // hnm3u8,hnyun
-        addVodSource("红牛影视", "https://www.hongniuzy2.com/api.php/provide/vod/")
+        addVodSource("红牛影视", "https://www.hongniuzy2.com/api.php/provide/vod/from/hnm3u8/")
         // kbzy,kbm3u8
-        addVodSource("快播影视", "https://www.kuaibozy.com/api.php/provide/vod/")
+        addVodSource("快播影视", "https://www.kuaibozy.com/api.php/provide/vod/from/kbm3u8/")
         // bjyun,bjm3u8
         addVodSource("八戒影视", "https://cj.bajiecaiji.com/inc/api.php/provide/vod/", 1)
         // tpiframe,tpm3u8
         addVodSource("淘片影视", "https://taopianapi.com/home/cjapi/as/mc10/vod/xml", 1)
         // xhzy,xhm3u8
-        addVodSource("星海影视", "https://www.xhzy01.com/api.php/provide/vod/")
+        addVodSource("星海影视", "https://www.xhzy01.com/api.php/provide/vod/from/xhm3u8/")
         // wjm3u8
         addVodSource("无尽影视", "https://api.wujinapi.me/api.php/provide/vod/from/wjm3u8/")
         // ukyun,ukm3u8
-        addVodSource("U酷影视", "https://api.ukuapi.com/api.php/provide/vod/")
+        addVodSource("U酷影视", "https://api.ukuapi.com/api.php/provide/vod/from/ukm3u8/")
         // wolong
         addVodSource("卧龙影视", "https://collect.wolongzyw.com/api.php/provide/vod/")
         // iva,kkyun
         addVodSource("速更影视", "https://www.sugengzy.cn/api.php/provide/vod/")
         // ptm3u8,ptyun
-        addVodSource("阳光影视", "https://www.xxzy.org/api.php/provide/vod/")
+        addVodSource("阳光影视", "https://www.xxzy.org/api.php/provide/vod/from/ptm3u8/")
         // ikm3u8
         addVodSource("iKun影视", "https://ikunzyapi.com/api.php/provide/vod")
         // yhm3u8
         addVodSource("樱花影视", "https://m3u8.apiyhzy.com/api.php/provide/vod/")
-        addVodSource("樱花影视2", "https://yhzy.cc/api.php/provide/vod/")
+//        addVodSource("樱花影视2", "https://yhzy.cc/api.php/provide/vod/")
         // jinyingm3u8,jinyingyun
-        addVodSource("金鹰影视", "https://jinyingzy.com/provide/vod/")
+        addVodSource("金鹰影视", "https://jinyingzy.com/provide/vod/from/jinyingm3u8/")
         // sdyun,sdm3u8
-        addVodSource("闪电影视", "https://sdzyapi.com/api.php/provide/vod/")
+        addVodSource("闪电影视", "https://sdzyapi.com/api.php/provide/vod/from/sdm3u8/")
         // lezy,lem3u8
-        addVodSource("鱼乐影视", "https://api.yulecj.com/api.php/provide/vod/")
+        addVodSource("鱼乐影视", "https://api.yulecj.com/api.php/provide/vod/from/lem3u8/")
         // tom,tomm3u8
-        addVodSource("Tom影视", "https://www.tomziyuan.com/api.php/provide/vod/")
+        addVodSource("Tom影视", "https://www.tomziyuan.com/api.php/provide/vod/from/tomm3u8/")
         // wjm3u8
         addVodSource("无尽影视", "https://api.wujinapi.me/api.php/provide/vod/from/wjm3u8/")
+        // gsm3u8
+        addVodSource("光速影视", "https://api.guangsuapi.com/api.php/provide/vod/from/gsm3u8/")
         // haiwaikan
         registerMainAPI(HaiwaikanProvider())
         // -----------------------------------
