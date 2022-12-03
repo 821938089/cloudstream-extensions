@@ -105,31 +105,27 @@ class LibvioProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
+        var html = app.get(data).text
+        val vod = VodExtractor(html)
+        val playData = vod.playerInfo ?: return false
 
-        val document = app.get(data).document
-        var script = document.select("script").firstOrNull {
-            it.data().indexOf("var player_aaaa=") > -1
-        }?.data()
-        if (script != null) {
-            script = script.replace("var player_aaaa=", "")
-            AppUtils.tryParseJson<PlayData>(script)?.let { playData ->
-                playData.url ?: return@let
-                playData.link ?: return@let
-                val js = app.get("$mainUrl/static/player/${playData.from}.js?v=1.3").text
-                val src = js.substring("src=\"", "'")
-                val html = app.get(
-                    "$src${playData.url}&next=${playData.link_next}&id=${playData.id}&nid=${playData.nid}",
-                    referer = "$mainUrl/"
-                ).text
-                val m3u8Url = html.substring("var urls = '", "';")
-                if (m3u8Url.isBlank()) return false
-                if (m3u8Url.indexOf(".m3u8") > -1) {
-                    M3u8Helper.generateM3u8(name, m3u8Url, "", name = playData.from!!)
-                        .forEach(callback)
-                } else {
-                    callback(ExtractorLink(name, playData.from!!, m3u8Url, "", Qualities.Unknown.value))
-                }
-            }
+        val js = app.get("$mainUrl/static/player/${playData.from}.js?v=1.3").text
+        val src = js.substring("src=\"", "'")
+        val url = "$src${playData.url}&next=${playData.linkNext}&id=${playData.id}&nid=${playData.nId}"
+//        if (playData.from == "duoduozy") {
+//            "$src${playData.url}"
+//        } else {
+//            "$src${playData.url}&next=${playData.linkNext}&id=${playData.id}&nid=${playData.nId}"
+//        }
+        html = app.get(url, referer = "$mainUrl/").text
+        val m3u8Url = html.substring("var urls = '", "';")
+
+        if (m3u8Url.isBlank()) return false
+        if (m3u8Url.indexOf(".m3u8") > -1) {
+            M3u8Helper.generateM3u8(name, m3u8Url, "", name = playData.from!!)
+                .forEach(callback)
+        } else {
+            callback(ExtractorLink(name, playData.from!!, m3u8Url, "", Qualities.Unknown.value))
         }
         return true
     }
@@ -150,8 +146,4 @@ class LibvioProvider : MainAPI() {
         @JsonProperty("nid") val nid: String?,
         @JsonProperty("from") val from: String?
     )
-}
-
-fun String.substring(left: String, right: String): String {
-    return substringAfter(left).substringBefore(right)
 }

@@ -68,6 +68,10 @@ class SuperVodPlugin : Plugin() {
         addVodSource("无尽影视", "https://api.wujinapi.me/api.php/provide/vod/from/wjm3u8/")
         // gsm3u8
         addVodSource("光速影视", "https://api.guangsuapi.com/api.php/provide/vod/from/gsm3u8/")
+        // ffm3u8
+        addVodSource("非凡影视", "https://cj.ffzyapi.com/api.php/provide/vod/from/ffm3u8/")
+        // zkzym3u8
+//        addVodSource("极客影视", "https://jkzy1.com/api.php/provide/vod/from/zkzym3u8/")
         // haiwaikan
         registerMainAPI(HaiwaikanProvider())
         // -----------------------------------
