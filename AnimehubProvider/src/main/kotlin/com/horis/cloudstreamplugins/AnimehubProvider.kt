@@ -10,12 +10,9 @@ import org.jsoup.nodes.Element
 
 class AnimehubProvider : MainAPI() {
     override val supportedTypes = setOf(
-        TvType.Movie,
         TvType.AnimeMovie,
-        TvType.TvSeries,
-        TvType.Anime,
-        TvType.AsianDrama,
-        TvType.Others
+        TvType.OVA,
+        TvType.Anime
     )
     override var lang = "en"
 
