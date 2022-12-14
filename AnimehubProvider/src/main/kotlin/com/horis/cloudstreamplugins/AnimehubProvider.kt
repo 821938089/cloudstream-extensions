@@ -12,7 +12,7 @@ class AnimehubProvider : MainAPI() {
     override val supportedTypes = setOf(
         TvType.AnimeMovie,
         TvType.OVA,
-        TvType.Anime
+        TvType.Anime,
     )
     override var lang = "en"
 
