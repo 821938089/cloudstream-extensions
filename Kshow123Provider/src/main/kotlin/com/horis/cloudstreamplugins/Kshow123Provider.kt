@@ -9,12 +9,7 @@ import org.jsoup.nodes.Element
 
 class Kshow123Provider : MainAPI() {
     override val supportedTypes = setOf(
-        TvType.Movie,
-        TvType.AnimeMovie,
-        TvType.TvSeries,
-        TvType.Anime,
-        TvType.AsianDrama,
-        TvType.Others
+        TvType.AsianDrama
     )
     override var lang = "en"
 
