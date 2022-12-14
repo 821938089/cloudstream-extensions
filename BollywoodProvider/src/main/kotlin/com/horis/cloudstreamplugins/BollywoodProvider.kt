@@ -16,7 +16,7 @@ class BollywoodProvider : MainAPI() {
         TvType.Movie,
         TvType.TvSeries,
     )
-    override var lang = "en"
+    override var lang = "hi"
 
     override var mainUrl = "https://bollywood.eu.org"
     override var name = "Bollywood"
