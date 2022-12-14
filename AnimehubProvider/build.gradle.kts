@@ -20,7 +20,7 @@ cloudstream {
     tvTypes = listOf(
         "AnimeMovie",
         "Anime",
-        "OVA"
+        "OVA",
     )
 
     iconUrl = "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://123animehub.cc&size=%size%"
