@@ -78,9 +78,10 @@ subprojects {
         implementation(kotlin("stdlib")) // adds standard kotlin features, like listOf, mapOf etc
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-        implementation("com.github.Blatzar:NiceHttp:0.3.5") // http library
+        implementation("com.github.Blatzar:NiceHttp:0.4.1") // http library
         implementation("org.jsoup:jsoup:1.15.3") // html parser
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+        implementation("org.mozilla:rhino:1.7.14")
     }
 }
 
