@@ -14,11 +14,7 @@ import java.util.concurrent.ConcurrentHashMap
 class BollywoodProvider : MainAPI() {
     override val supportedTypes = setOf(
         TvType.Movie,
-        TvType.AnimeMovie,
         TvType.TvSeries,
-        TvType.Anime,
-        TvType.AsianDrama,
-        TvType.Others
     )
     override var lang = "en"
 
