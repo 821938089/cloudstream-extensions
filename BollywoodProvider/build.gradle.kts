@@ -1,13 +1,13 @@
 // use an integer for version numbers
-version = 1
+version = 2
 
 
 cloudstream {
+    language = "hi"
     // All of these properties are optional, you can safely remove them
-    language = "en"
 
 //    description = "Lorem Ipsum"
-//    authors = listOf("Cloudburst")
+    authors = listOf("Horis")
 
     /**
      * Status int as the following:
@@ -17,13 +17,12 @@ cloudstream {
      * 3: Beta only
      * */
     status = 1 // will be 3 if unspecified
+    tvTypes = listOf(
+        "Movie",
+        "TvSeries",
+    )
 
-    // List of video source types. Users are able to filter for extensions in a given category.
-    // You can find a list of avaliable types here:
-    // https://recloudstream.github.io/cloudstream/html/app/com.lagradost.cloudstream3/-tv-type/index.html
-    tvTypes = listOf("Movie", "AnimeMovie", "TvSeries", "Anime", "AsianDrama", "Others")
-
-    iconUrl = "https://www.google.com/s2/favicons?domain=bollywood.eu.org&sz=%size%"
+    iconUrl = "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=bollywood.eu.org&size=%size%"
 
     requiresResources = true
 }
