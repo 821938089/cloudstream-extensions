@@ -17,7 +17,7 @@ class MxplayerProvider : MainAPI() {
         TvType.TvSeries,
         TvType.AsianDrama,
     )
-    override var lang = "en"
+    override var lang = "hi"
 
     override var mainUrl = "https://www.mxplayer.in"
     override var name = "Mxplayer"
