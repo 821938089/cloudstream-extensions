@@ -7,7 +7,7 @@ class BollyzoneProvider : DesicinemasProvider() {
     override val supportedTypes = setOf(
         TvType.TvSeries
     )
-    override var lang = "en"
+    override var lang = "hi"
 
     override var mainUrl = "https://www.bollyzone.tv"
     override var name = "Bollyzone"

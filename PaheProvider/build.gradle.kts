@@ -1,5 +1,5 @@
 // use an integer for version numbers
-version = 1
+version = 2
 
 
 cloudstream {
@@ -18,9 +18,8 @@ cloudstream {
      * */
     status = 1 // will be 3 if unspecified
     tvTypes = listOf(
-        "AnimeMovie",
-        "Anime",
-        "OVA",
+        "Movie",
+        "TvSeries",
     )
 
     iconUrl = "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://pahe.sbs&size=%size%"

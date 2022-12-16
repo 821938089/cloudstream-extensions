@@ -17,7 +17,7 @@ open class DesicinemasProvider : MainAPI() {
     override val supportedTypes = setOf(
         TvType.Movie
     )
-    override var lang = "en"
+    override var lang = "hi"
 
     override var mainUrl = "https://desicinemas.tv"
     override var name = "Desicinemas"
