@@ -9,8 +9,6 @@ import com.lagradost.cloudstream3.USER_AGENT
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.nicehttp.Requests
 import com.lagradost.nicehttp.ResponseParser
-import okhttp3.OkHttpClient
-import okhttp3.Protocol
 import kotlin.reflect.KClass
 
 val JSONParser = object : ResponseParser {
@@ -37,14 +35,7 @@ val JSONParser = object : ResponseParser {
     }
 }
 
-val okHttpClient = OkHttpClient.Builder()
-    .protocols(listOf(Protocol.HTTP_2, Protocol.HTTP_1_1))
-    .build()
-
-val app = Requests(
-    baseClient = okHttpClient,
-    responseParser = JSONParser
-).apply {
+val app = Requests(responseParser = JSONParser).apply {
     defaultHeaders = mapOf("User-Agent" to USER_AGENT)
 }
 
@@ -59,45 +50,6 @@ inline fun <reified T : Any> tryParseJson(text: String): T? {
         e.printStackTrace()
         null
     }
-}
-
-/**
- * Escape解码
- *
- * @param content 被转义的内容
- * @return 解码后的字符串
- */
-fun unescape(content: String): String {
-    if (content.isBlank()) {
-        return content
-    }
-    val tmp = StringBuilder(content.length)
-    var lastPos = 0
-    var pos: Int
-    var ch: Char
-    while (lastPos < content.length) {
-        pos = content.indexOf("%", lastPos)
-        if (pos == lastPos) {
-            if (content[pos + 1] == 'u') {
-                ch = content.substring(pos + 2, pos + 6).toInt(16).toChar()
-                tmp.append(ch)
-                lastPos = pos + 6
-            } else {
-                ch = content.substring(pos + 1, pos + 3).toInt(16).toChar()
-                tmp.append(ch)
-                lastPos = pos + 3
-            }
-        } else {
-            lastPos = if (pos == -1) {
-                tmp.append(content.substring(lastPos))
-                content.length
-            } else {
-                tmp.append(content, lastPos, pos)
-                pos
-            }
-        }
-    }
-    return tmp.toString()
 }
 
 suspend fun loadExtractor(

@@ -1,17 +1,10 @@
 package com.horis.cloudstreamplugins
 
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.network.CloudflareKiller
-import com.lagradost.cloudstream3.utils.Coroutines.ioSafe
 import com.lagradost.cloudstream3.utils.ExtractorLink
-import com.lagradost.cloudstream3.utils.loadExtractor
-import com.lagradost.nicehttp.NiceResponse
-import kotlinx.coroutines.delay
 import okhttp3.Interceptor
 import okhttp3.Response
-import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 
 open class DesicinemasProvider : MainAPI() {
     override val supportedTypes = setOf(
@@ -60,7 +53,7 @@ open class DesicinemasProvider : MainAPI() {
         val url = "$mainUrl/?s=$query"
         val doc = app.get(url, referer = "$mainUrl/").document
 
-        val items = doc.select(".MovieList ul li").mapNotNull {
+        val items = doc.select(".MovieList li").mapNotNull {
             it.toHomePageResult()
         }
         return items

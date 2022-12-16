@@ -21,6 +21,16 @@ class BollyzoneProvider : DesicinemasProvider() {
         return HomePageResponse(arrayListOf(pages).filterNotNull())
     }
 
+    override suspend fun search(query: String): List<SearchResponse> {
+        val url = "$mainUrl/?s=$query"
+        val doc = app.get(url, referer = "$mainUrl/").document
+
+        val items = doc.select(".MovieList li").mapNotNull {
+            it.toHomePageResult()
+        }
+        return items
+    }
+
     private fun Element.toHomePageList(name: String): HomePageList {
         val items = select("li")
             .mapNotNull {
