@@ -1,7 +1,6 @@
 package com.horis.cloudstreamplugins
 
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.network.CloudflareKiller
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
@@ -40,8 +39,6 @@ class BollywoodProvider : MainAPI() {
     )
 
     private val nextPageToken = ConcurrentHashMap<String, String>()
-
-    private val cloudflareKiller = CloudflareKiller()
 
     private val headers = mapOf(
         "Referer" to "$mainUrl/",

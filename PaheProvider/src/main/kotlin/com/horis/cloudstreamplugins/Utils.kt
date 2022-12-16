@@ -50,3 +50,42 @@ inline fun <reified T : Any> tryParseJson(text: String): T? {
     }
 }
 
+/**
+ * Escape解码
+ *
+ * @param content 被转义的内容
+ * @return 解码后的字符串
+ */
+fun unescape(content: String): String {
+    if (content.isBlank()) {
+        return content
+    }
+    val tmp = StringBuilder(content.length)
+    var lastPos = 0
+    var pos: Int
+    var ch: Char
+    while (lastPos < content.length) {
+        pos = content.indexOf("%", lastPos)
+        if (pos == lastPos) {
+            if (content[pos + 1] == 'u') {
+                ch = content.substring(pos + 2, pos + 6).toInt(16).toChar()
+                tmp.append(ch)
+                lastPos = pos + 6
+            } else {
+                ch = content.substring(pos + 1, pos + 3).toInt(16).toChar()
+                tmp.append(ch)
+                lastPos = pos + 3
+            }
+        } else {
+            lastPos = if (pos == -1) {
+                tmp.append(content.substring(lastPos))
+                content.length
+            } else {
+                tmp.append(content, lastPos, pos)
+                pos
+            }
+        }
+    }
+    return tmp.toString()
+}
+
