@@ -1,9 +1,9 @@
 // use an integer for version numbers
-version = 1
+version = 2
 
 
 cloudstream {
-    language = "en"
+    language = "hi"
     // All of these properties are optional, you can safely remove them
 
 //    description = "Lorem Ipsum"
@@ -19,8 +19,6 @@ cloudstream {
     status = 1 // will be 3 if unspecified
     tvTypes = listOf(
         "Movie",
-        "Anime",
-        "OVA",
     )
 
     iconUrl = "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://desicinemas.tv&size=%size%"

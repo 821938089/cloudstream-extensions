@@ -11,9 +11,8 @@ import org.jsoup.nodes.Element
 
 class PaheProvider : MainAPI() {
     override val supportedTypes = setOf(
-        TvType.AnimeMovie,
-        TvType.OVA,
-        TvType.Anime,
+        TvType.Movie,
+        TvType.TvSeries,
     )
     override var lang = "en"
 
