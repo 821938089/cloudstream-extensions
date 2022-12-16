@@ -12,13 +12,25 @@ class BollyzoneProvider : DesicinemasProvider() {
     override var mainUrl = "https://www.bollyzone.tv"
     override var name = "Bollyzone"
 
+    override val mainPage = mainPageOf(
+        "$mainUrl/series/" to "Series"
+    )
+
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
-        val doc = app.get(mainUrl).document
+        val url = if (page == 1) {
+            request.data
+        } else {
+            "${request.data}page/$page/"
+        }
+
+        val doc = app.get(url, referer = "$mainUrl/").document
 
         val pages = doc.selectFirst(".MovieList")
-            ?.toHomePageList("Latest Episode Updates")
+            ?.toHomePageList(request.name)
 
-        return HomePageResponse(arrayListOf(pages).filterNotNull())
+        val hasNext = pages?.list?.isNotEmpty() == true
+
+        return HomePageResponse(arrayListOf(pages).filterNotNull(), hasNext)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {

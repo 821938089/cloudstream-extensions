@@ -17,16 +17,40 @@ open class DesicinemasProvider : MainAPI() {
 
     override val hasMainPage = true
 
+    override val mainPage = mainPageOf(
+        "https://desicinemas.tv/" to "Home",
+        "https://desicinemas.tv/category/punjabi/" to "Punjabi",
+        "https://desicinemas.tv/category/bollywood/" to "Bollywood",
+        "https://desicinemas.tv/category/hindi-dubbed/" to "Hindi Dubbed"
+    )
+
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
-        val doc = app.get(mainUrl).document
+        val url = if (page == 1 || request.name == "Home") {
+            request.data
+        } else {
+            "${request.data}page/$page/"
+        }
 
-        val pages1 = doc.selectFirst(".MovieListTop")
-            ?.toHomePageList("Most popular")
+        val doc = app.get(url, referer = "$mainUrl/").document
 
-        val pages2 = doc.selectFirst("#home-movies-post")
-            ?.toHomePageList("Latest Movies")
+        val pages1 = if (request.name == "Home") {
+            doc.selectFirst(".MovieListTop")
+                ?.toHomePageList("Most popular")
+        } else null
 
-        return HomePageResponse(arrayListOf(pages1, pages2).filterNotNull())
+        val pages2 = if (request.name == "Home") {
+            doc.selectFirst("#home-movies-post")
+                ?.toHomePageList("Latest Movies")
+        } else null
+
+        val pages3 = if (request.name != "Home") {
+            doc.selectFirst(".MovieList")
+                ?.toHomePageList(request.name)
+        } else null
+
+        val hasNext = request.name != "Home" && pages3?.list?.isNotEmpty() == true
+
+        return HomePageResponse(arrayListOf(pages1, pages2, pages3).filterNotNull(), hasNext)
     }
 
     private fun Element.toHomePageList(name: String): HomePageList {
