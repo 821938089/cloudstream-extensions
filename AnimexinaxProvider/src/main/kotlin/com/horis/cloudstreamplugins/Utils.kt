@@ -50,3 +50,7 @@ inline fun <reified T : Any> tryParseJson(text: String): T? {
     }
 }
 
+fun String.substring(left: String, right: String): String {
+    return substringAfter(left).substringBefore(right)
+}
+

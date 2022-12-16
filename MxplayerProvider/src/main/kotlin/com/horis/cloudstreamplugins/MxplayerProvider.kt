@@ -1,9 +1,7 @@
 package com.horis.cloudstreamplugins
 
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
-import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.nicehttp.NiceResponse
@@ -216,7 +214,7 @@ class MxplayerProvider : MainAPI() {
         val data = res.document.select("script")
             .firstOrNull { it.data().startsWith("window.state = ") }
             ?.data() ?: throw ErrorLoadingException("load data fail (main page)")
-        return parseJson<Mxplayer>(data.substringAfter("window.state = "))
+        return tryParseJson(data.substringAfter("window.state = "))
             ?: throw ErrorLoadingException("parse mxplayer data fail")
     }
 
