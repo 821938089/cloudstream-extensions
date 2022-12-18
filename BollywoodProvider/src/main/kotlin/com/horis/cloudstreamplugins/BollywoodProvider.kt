@@ -7,6 +7,8 @@ import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
 import kotlinx.coroutines.runBlocking
+import okhttp3.Interceptor
+import okhttp3.Response
 import okio.ByteString.Companion.encode
 import java.util.concurrent.ConcurrentHashMap
 
@@ -133,7 +135,7 @@ class BollywoodProvider : MainAPI() {
         return true
     }
 
-    fun List<GDFile>.toSearchResponseList(): List<SearchResponse> {
+    private fun List<GDFile>.toSearchResponseList(): List<SearchResponse> {
         return map {
             newAnimeSearchResponse(it.name, it.toJson()) {
                 posterUrl =
@@ -142,7 +144,7 @@ class BollywoodProvider : MainAPI() {
         }
     }
 
-    suspend fun getConfig(): ApiConfig {
+    private suspend fun getConfig(): ApiConfig {
         val regex = """const country = "(.*?)";
 const downloadtime = "(.*?)";
 var arrayofworkers = (.*)""".toRegex()
@@ -162,7 +164,7 @@ var arrayofworkers = (.*)""".toRegex()
         return ApiConfig(country, downloadTime, workers)
     }
 
-    suspend fun listDir(file: GDFile): List<GDFile> {
+    private suspend fun listDir(file: GDFile): List<GDFile> {
         var nextPageToken = ""
         var page = 0
         val files = arrayListOf<GDFile>()
@@ -177,6 +179,19 @@ var arrayofworkers = (.*)""".toRegex()
             page++
         }
         return files
+    }
+
+    @Suppress("ObjectLiteralToLambda")
+    override fun getVideoInterceptor(extractorLink: ExtractorLink): Interceptor {
+        return object : Interceptor {
+            override fun intercept(chain: Interceptor.Chain): Response {
+                val request = chain.request()
+                    .newBuilder()
+                    .removeHeader("referer")
+                    .build()
+                return chain.proceed(request)
+            }
+        }
     }
 
     data class GDIndex(

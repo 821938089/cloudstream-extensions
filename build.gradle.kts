@@ -81,7 +81,7 @@ subprojects {
         implementation("com.github.Blatzar:NiceHttp:0.4.1") // http library
         implementation("org.jsoup:jsoup:1.15.3") // html parser
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
-        implementation("org.mozilla:rhino:1.7.14")
+        implementation("org.mozilla:rhino:1.7.13")
     }
 }
 
