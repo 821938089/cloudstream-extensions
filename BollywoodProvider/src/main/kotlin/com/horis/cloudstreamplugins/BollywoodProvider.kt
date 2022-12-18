@@ -80,18 +80,21 @@ class BollywoodProvider : MainAPI() {
             val items = listDir(file)
             val folders = items.filter { it.isFolder }
             val files = items.filter { !it.isFolder }
-            seasons = folders.mapIndexed { i, f -> SeasonData(i, f.name) }
+            seasons = folders.mapIndexed { i, f ->
+                SeasonData(i + 1, "S\\d+".toRegex().find(f.name)?.value ?: f.name)
+            }
             folders.amapIndexed { index, gdFile ->
                 listDir(gdFile).map {
                     newEpisode(it) {
-                        name = it.name
-                        season = index
+                        name = "E\\d+".toRegex().find(it.name)?.value ?: it.name
+                        season = index + 1
                     }
                 }
             }.flatten().toMutableList().also {
                 files.mapTo(it) { gdFile ->
                     newEpisode(gdFile) {
                         name = gdFile.name
+                        season = seasons.size
                     }
                 }
             }
@@ -139,8 +142,10 @@ class BollywoodProvider : MainAPI() {
     private fun List<GDFile>.toSearchResponseList(): List<SearchResponse> {
         return map {
             newAnimeSearchResponse(it.name, it.toJson()) {
-                posterUrl =
-                    "https://i1.wp.com/image-cdn-simple-program.hashhackers.com/0:/images/${it.name}.png"
+                if (!it.isFolder) {
+                    posterUrl =
+                        "https://i1.wp.com/image-cdn-simple-program.hashhackers.com/0:/images/${it.name}.png"
+                }
             }
         }
     }
@@ -153,12 +158,9 @@ var arrayofworkers = (.*)""".toRegex()
             "https://geolocation.zindex.eu.org/api.js",
             referer = "$mainUrl/",
         ).text
-        val match = regex.find(js)
-        val country =
-            match?.groupValues?.get(1)
-                ?: throw ErrorLoadingException("parse api config fail (country)")
-        val downloadTime =
-            match.groupValues[2]
+        val match = regex.find(js) ?: throw ErrorLoadingException("parse api config fail")
+        val country = match.groupValues[1]
+        val downloadTime = match.groupValues[2]
         val workers = tryParseJson<List<String>>(match.groupValues[3])
             ?: throw ErrorLoadingException("parse api config fail (workers)")
 
