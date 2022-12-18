@@ -1,5 +1,5 @@
 // use an integer for version numbers
-version = 4
+version = 5
 
 
 cloudstream {
@@ -22,7 +22,7 @@ cloudstream {
         "TvSeries",
     )
 
-    iconUrl = "https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=bollywood.eu.org&size=%size%"
+    iconUrl = "https://cdn.jsdelivr.net/npm/@googledrive/index@2.0.20/images/favicon.ico"
 
-    requiresResources = true
+//    requiresResources = true
 }

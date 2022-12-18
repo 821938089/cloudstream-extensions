@@ -117,12 +117,13 @@ class BollywoodProvider : MainAPI() {
         val file = parseJson<GDFile>(data)
         val key = "bhadoosystem"
         val expiry = (System.currentTimeMillis() + 345600000).toString()
-        val hmacSignId = "${file.id}@$expiry".encode()
+        val hmacSign = "${file.id}@$expiry".encode()
             .hmacSha256(key.encode()).base64().replace("+", "-")
-        val encryptedId = base64Encode(CryptoJs.aesEncrypt(file.id, key).toByteArray())
-        val encryptedExpiry = base64Encode(CryptoJs.aesEncrypt(expiry, key).toByteArray())
-        val link =
-            "https://api.${apiConfig.workers.random()}.workers.dev/public.php?file=$encryptedId&expiry=$encryptedExpiry&mac=$hmacSignId"
+        val encryptedId = base64Encode(CryptoAES.encrypt(key, file.id).toByteArray())
+        val encryptedExpiry = base64Encode(CryptoAES.encrypt(key, expiry).toByteArray())
+        val worker = apiConfig.workers.random()
+        val link = "https://api.$worker.workers.dev/public.php" +
+                "?file=$encryptedId&expiry=$encryptedExpiry&mac=$hmacSign"
         callback(
             ExtractorLink(
                 name,
