@@ -136,8 +136,8 @@ class YaNaiFeiProvider : MainAPI() {
         val html = app.get(playUrl, referer = referer).text
         val encryptedUrl = base64DecodeArray(html.substring("\"url\": \"", "\","))
         val tokenKey = when (from) {
-            "NetflixOME", "QEys", "NetflixC", "dxzy", "netflixzx" -> "8FB5006902F91320"
-            "netflixmom", "netflixpro", "netflixmax", "rx" -> "A42EAC0C2B408472"
+            "QEys", "NetflixC", "dxzy", "netflixzx" -> "8FB5006902F91320"
+            "NetflixOME", "netflixmom", "netflixpro", "netflixmax", "rx" -> "A42EAC0C2B408472"
             else -> throw ErrorLoadingException("未知视频播放来源")
         }.encodeToByteArray()
         val tokenIv = html.substring("le_token = \"", "\";").encodeToByteArray()
