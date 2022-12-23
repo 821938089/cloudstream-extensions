@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference
 class SuperVodPlugin : Plugin() {
     override fun load(context: Context) {
         // All providers should be added in this manner. Please don't edit the providers list directly.
-        activityRef = WeakReference(context as Activity)
+//        activityRef = WeakReference(context as Activity)
         // dbyun,dbm3u8
         addVodSource("百度影视", "https://api.apibdzy.com/api.php/provide/vod/from/dbm3u8/")
         // tkyun,tkm3u8
@@ -78,6 +78,7 @@ class SuperVodPlugin : Plugin() {
         // haiwaikan
         addVodSource("欧乐影视", "https://www.oulevod.tv/api.php/provide/vod/")
         // bjyun,bjm3u8,tkyun,tkm3u8,dbyun,dbm3u8
+        // http://104.149.175.67/api.php/provide/vod/
         addVodSource("神马聚合影视", "https://img.smdyw.top/api.php/provide/vod/")
         // kbm3u8,bjm3u8,hnm3u8,haiwaikan
         addVodSource("考拉TV", "https://ikaola.tv/api.php/provide/vod/")
@@ -94,7 +95,7 @@ class SuperVodPlugin : Plugin() {
         addVodSource("网民影视", "https://www.prinevillesda.org/api.php/provide/vod/")
     }
 
-    fun addVodSource(
+    private fun addVodSource(
         name: String,
         apiUrl: String,
         responseType: Int = 0

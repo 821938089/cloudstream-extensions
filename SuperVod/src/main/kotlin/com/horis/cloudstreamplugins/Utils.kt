@@ -60,13 +60,13 @@ val app = Requests(responseParser = JSONParser).apply {
     defaultHeaders = mapOf("User-Agent" to USER_AGENT)
 }
 
-var activityRef: WeakReference<Activity>? = null
-val activity get() = activityRef?.get()
-
-fun showToast(message: String, duration: Int? = null) {
-    val activity = activity ?: return
-    CommonActivity.showToast(activity, message, duration)
-}
+//var activityRef: WeakReference<Activity>? = null
+//val activity get() = activityRef?.get()
+//
+//fun showToast(message: String, duration: Int? = null) {
+//    val activity = activity ?: return
+//    CommonActivity.showToast(activity, message, duration)
+//}
 
 /**
  * Escape解码
