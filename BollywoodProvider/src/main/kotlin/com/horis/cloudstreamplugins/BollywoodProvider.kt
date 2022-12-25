@@ -25,11 +25,16 @@ class BollywoodProvider : MainAPI() {
     override val hasMainPage = true
 
     private val api = "https://simpleprogramapi.zindex.eu.org"
-    private val apiConfig by lazy {
-        runBlocking {
-            getConfig()
+    private var apiConfig: ApiConfig? = null
+        get() {
+            field?.let {
+                return it
+            }
+            field = runBlocking {
+                getConfig()
+            }
+            return field
         }
-    }
 
     override val mainPage = mainPageOf(
         "$api/0:/Bollywood.Hindi/" to "Bollywood Hindi Movies",
@@ -49,6 +54,10 @@ class BollywoodProvider : MainAPI() {
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
+        if (page == 1) {
+            apiConfig = null
+            nextPageToken.clear()
+        }
         val url =
             "${request.data}?password=&page_token=${nextPageToken[request.name] ?: ""}&page_index=${page - 1}&_=${System.currentTimeMillis()}"
 
@@ -124,7 +133,8 @@ class BollywoodProvider : MainAPI() {
             .hmacSha256(key.encode()).base64().replace("+", "-")
         val encryptedId = base64Encode(CryptoAES.encrypt(key, file.id).toByteArray())
         val encryptedExpiry = base64Encode(CryptoAES.encrypt(key, expiry).toByteArray())
-        val worker = apiConfig.workers.random()
+        val worker = apiConfig?.workers?.random()
+            ?: throw ErrorLoadingException("worker not found.")
         val link = "https://api.$worker.workers.dev/public.php" +
                 "?file=$encryptedId&expiry=$encryptedExpiry&mac=$hmacSign"
         callback(
