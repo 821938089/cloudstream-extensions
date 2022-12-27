@@ -14,19 +14,20 @@ class Dailymotion : ExtractorApi() {
     override val requiresReferer = false
     private val videoIdRegex = "^[kx][a-zA-Z0-9]+\$".toRegex()
 
+    // https://www.dailymotion.com/video/k3JAHfletwk94ayCVIu
+    // https://www.dailymotion.com/embed/video/k3JAHfletwk94ayCVIu
     override suspend fun getUrl(
         url: String,
         referer: String?,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ) {
-        val doc = app.get(url).document
+        val embedUrl = getEmbedUrl(url) ?: return
+        val doc = app.get(embedUrl).document
         val prefix = "window.__PLAYER_CONFIG__ = "
-        val configStr = doc.select("script").map { it.data() }
-            .firstOrNull { it.startsWith(prefix) }
-            ?: return
+        val configStr = doc.selectFirst("script:containsData($prefix)")?.data() ?: return
         val config = tryParseJson<Config>(configStr.substringAfter(prefix)) ?: return
-        val id = getVideoId(url) ?: return
+        val id = getVideoId(embedUrl) ?: return
         val dmV1st = config.dmInternalData.v1st
         val dmTs = config.dmInternalData.ts
         val metaDataUrl =
@@ -36,22 +37,28 @@ class Dailymotion : ExtractorApi() {
             "dmvk" to config.context.dmvk,
             "ts" to dmTs.toString()
         )
-        val metaData = app.get(metaDataUrl, referer = url, cookies = cookies)
+        val metaData = app.get(metaDataUrl, referer = embedUrl, cookies = cookies)
             .parsedSafe<MetaData>() ?: return
         metaData.qualities.forEach { (key, video) ->
-            video.forEach {
-                callback(
-                    ExtractorLink(
-                        name,
-                        "$name $key",
-                        it.url,
-                        "",
-                        Qualities.Unknown.value,
-                        true
-                    )
+            video.map {
+                ExtractorLink(
+                    name,
+                    "$name $key",
+                    it.url,
+                    "",
+                    Qualities.Unknown.value,
+                    true
                 )
-            }
+            }.forEach(callback)
         }
+    }
+
+    private fun getEmbedUrl(url: String): String? {
+        if (url.contains("/embed/")) {
+            return url
+        }
+        val vid = getVideoId(url) ?: return null
+        return "$mainUrl/embed/video/$vid"
     }
 
     private fun getVideoId(url: String): String? {
