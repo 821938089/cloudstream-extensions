@@ -139,7 +139,7 @@ class NivodProvider : MainAPI() {
                 name,
                 name,
                 link,
-                "",
+                "$mainUrl/",
                 Qualities.Unknown.value,
                 link.contains(".m3u8")
             )
@@ -152,7 +152,7 @@ class NivodProvider : MainAPI() {
     override fun getVideoInterceptor(extractorLink: ExtractorLink): Interceptor {
         return object : Interceptor {
             override fun intercept(chain: Interceptor.Chain): Response {
-                val request = chain.request().newBuilder().removeHeader("referer").build()
+                val request = chain.request()
                 return chain.proceed(request)
             }
         }
