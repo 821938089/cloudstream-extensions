@@ -12,7 +12,6 @@ class DramacoolPlugin: Plugin() {
         // All providers should be added in this manner. Please don't edit the providers list directly.
         registerMainAPI(DramacoolProvider())
         addExtractor(Vidstream2("https://asianembed.io"))
-        addExtractor(StreamSB2())
     }
 
     private fun addExtractor(element: ExtractorApi) {
