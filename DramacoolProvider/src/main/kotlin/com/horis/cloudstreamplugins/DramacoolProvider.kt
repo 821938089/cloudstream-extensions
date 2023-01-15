@@ -96,7 +96,9 @@ class DramacoolProvider : MainAPI() {
         val id = data.substringAfter("id=")
         val json = app.get("https://dramasb.com/stream?id=$id", verify = false).text
         val linksRegex = "\"link\":\"(.*?)\"".toRegex()
-        val servers = linksRegex.findAll(json).map { it.groupValues[1].replace("\\/", "/") }.toList()
+        val servers = linksRegex.findAll(json).map {
+            it.groupValues[1].replace("\\/", "/")
+        }.toList()
 
         servers.amap {
             loadExtractor(it, subtitleCallback, callback)

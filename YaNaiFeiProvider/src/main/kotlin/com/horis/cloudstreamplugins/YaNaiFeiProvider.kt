@@ -18,7 +18,12 @@ class YaNaiFeiProvider : MainAPI() {
     )
     override var lang = "zh"
 
-    override var mainUrl = "https://yanetflix.com"
+    /**
+     * 地址发布页
+     * https://yayaym.com/
+     * https://azx.me/
+     */
+    override var mainUrl = "https://yanetflix.tv"
     override var name = "鸭奈飞影视"
 
     override val hasMainPage = true
