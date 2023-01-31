@@ -1,5 +1,5 @@
 // use an integer for version numbers
-version = 4
+version = 1
 
 
 cloudstream {
@@ -18,8 +18,10 @@ cloudstream {
      * */
     status = 1 // will be 3 if unspecified
     tvTypes = listOf(
-        "AsianDrama",
+        "Movie",
+        "TvSeries",
     )
 
-    iconUrl = "https://www.google.com/s2/favicons?domain=dramacool.city&sz=%size%"
+    iconUrl = "https://cdn.jsdelivr.net/npm/@googledrive/index@2.0.20/images/favicon.ico"
+
 }
