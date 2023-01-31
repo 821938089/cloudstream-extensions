@@ -43,7 +43,7 @@ class DramacoolProvider : MainAPI() {
     private fun Element.toSearchResult(): SearchResponse? {
         val title = selectFirst("h3")?.text()?.trim() ?: return null
         val href = fixUrlNull(selectFirst("a")?.attr("href")) ?: return null
-        val posterUrl = fixUrlNull(selectFirst("img")?.attr("src"))
+        val posterUrl = fixUrlNull(selectFirst("img")?.attr("data-src"))
 
         return newAnimeSearchResponse(title, LoadUrl(href, posterUrl).toJson()) {
             this.posterUrl = posterUrl
