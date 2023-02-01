@@ -54,19 +54,12 @@ class Movie123Provider : MainAPI() {
 
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val url = "$mainUrl/?s=$query"
+        val url = "$mainUrl/search/$query"
         val document = app.get(url, referer = "$mainUrl/").document
 
-        val items = document.select("#posts-container > li").mapNotNull {
-            val a = it.selectFirst("a") ?: return@mapNotNull null
-            val name = it.selectFirst("h2")?.text() ?: return@mapNotNull null
-            val posterUrl = fixUrlNull(it.selectFirst("img")?.attr("src"))
-            val href = a.attr("href")
-            newMovieSearchResponse(name, href) {
-                this.posterUrl = posterUrl
-            }
+        return document.select(".EwDalIbaMM > div").mapNotNull {
+            it.toSearchResult()
         }
-        return items
     }
 
     override suspend fun load(url: String): LoadResponse? {
