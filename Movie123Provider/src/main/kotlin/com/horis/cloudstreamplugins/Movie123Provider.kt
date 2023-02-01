@@ -76,7 +76,7 @@ class Movie123Provider : MainAPI() {
                     name = title
                 })
             }
-        }
+        }.distinctBy { it.name }
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             posterUrl = document.select(".XIUyJddvQj img").attr("data-src")
