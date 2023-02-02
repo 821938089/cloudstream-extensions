@@ -90,6 +90,8 @@ class AnimehubProvider : MainAPI() {
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             posterUrl = d.posterUrl
+            plot = document.select(".desc").text()
+            year = document.select("dl.meta dt:containsOwn(Released:) + dd").text().toIntOrNull()
         }
     }
 
