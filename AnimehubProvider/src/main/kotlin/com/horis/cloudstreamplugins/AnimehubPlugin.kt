@@ -13,6 +13,7 @@ class AnimehubPlugin: Plugin() {
         registerMainAPI(AnimehubProvider())
         addExtractor(Vidstream2("https://goload.io"))
         addExtractor(Vidstream2("https://gogohd.net"))
+        addExtractor(Vidstream2("https://gembedhd.com"))
     }
 
     private fun addExtractor(element: ExtractorApi) {
