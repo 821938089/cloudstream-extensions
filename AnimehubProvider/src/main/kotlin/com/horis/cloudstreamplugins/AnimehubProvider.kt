@@ -82,7 +82,8 @@ class AnimehubProvider : MainAPI() {
         val episodes = doc.select(".episodes li a").mapNotNull {
 //            val href = fixUrl(it?.attr("href") ?: return@mapNotNull null)
             val name = it.text()
-            newEpisode(EpisodeData(id, name, server)) {
+            val epid = it.attr("data-id")
+            newEpisode(EpisodeData(epid, server)) {
                 this.name = name
             }
         }
@@ -101,7 +102,7 @@ class AnimehubProvider : MainAPI() {
         val data1 = tryParseJson<EpisodeData>(data) ?: return false
 
         val data2 = app.get(
-            "https://123animehub.cc/ajax/episode/info?epr=${data1.id}%2F${data1.episode}%2F${data1.server}&ts=${data1.episode}&_=${System.currentTimeMillis()}",
+            "https://123animehub.cc/ajax/episode/info?epr=${data1.epid}/${data1.server}&ts=001&_=${System.currentTimeMillis()}",
             verify = false,
             referer = "$mainUrl/"
         ).parsedSafe<PlayUrl>() ?: return false
@@ -116,8 +117,7 @@ class AnimehubProvider : MainAPI() {
     )
 
     data class EpisodeData(
-        val id: String,
-        val episode: String,
+        val epid: String,
         val server: String
     )
 
