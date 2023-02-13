@@ -3,7 +3,6 @@ package com.horis.cloudstreamplugins
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
-import com.lagradost.cloudstream3.utils.Qualities
 import okhttp3.Headers
 import org.jsoup.nodes.Element
 
@@ -67,8 +66,13 @@ class Movie123Provider : MainAPI() {
         val title = document.selectFirst("#info h1")?.text()?.trim() ?: return null
 
         val episodes = document.select("#iDgkXUZslQ a").map {
+            val epsName = it.text()
+            val epsNumber = Regex("(?i)Episode\\s?(\\d+)").find(epsName)?.groupValues?.getOrNull(1)?.toIntOrNull()
+            val epsSeason = Regex("(?i)Season\\s?(\\d+)").find(title)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: 1
             newEpisode(it.attr("href")) {
-                name = it.text()
+                name = epsName
+                episode = epsNumber
+                season = epsSeason
             }
         }.let {
             it.ifEmpty {
@@ -78,7 +82,9 @@ class Movie123Provider : MainAPI() {
             }
         }.distinctBy { it.name }
 
-        return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
+        val type = if(title.contains("Season", true)) TvType.TvSeries else TvType.Movie
+
+        return newTvSeriesLoadResponse(title, url, type, episodes) {
             posterUrl = document.select(".XIUyJddvQj img").attr("data-src")
             plot = document.select(".IbKbFmtgpQ.tZvUJSGrNY").text()
             year = document.select(".CWuyleLaBP a").text().toIntOrNull()
@@ -117,10 +123,10 @@ class Movie123Provider : MainAPI() {
                     callback(
                         ExtractorLink(
                             name,
-                            "${video.language} ${it}p",
+                            video.language,
                             video.src.split("360", limit = 3).joinToString(it.toString()),
                             "$mainUrl/",
-                            Qualities.Unknown.value
+                            it
                         )
                     )
                 }
@@ -147,9 +153,9 @@ class Movie123Provider : MainAPI() {
         // Get a list of cookie strings
         // set-cookie: name=value; -----> name=value
         val cookieList =
-            this.filter { it.first.equals(cookieKey, ignoreCase = true) }.map {
+            this.filter { it.first.equals(cookieKey, ignoreCase = true) }.mapNotNull {
                 it.second.split(";").firstOrNull()
-            }.filterNotNull()
+            }
 
         // [name=value, name2=value2] -----> mapOf(name to value, name2 to value2)
         return cookieList.associate {
