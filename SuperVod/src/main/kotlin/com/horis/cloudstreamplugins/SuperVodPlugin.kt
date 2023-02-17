@@ -40,7 +40,7 @@ class SuperVodPlugin : Plugin() {
         // tpiframe,tpm3u8
         addVodSource("淘片影视", "https://taopianapi.com/home/cjapi/as/mc10/vod/xml", 1)
         // xhzy,xhm3u8
-        addVodSource("星海影视", "https://www.xhzy01.com/api.php/provide/vod/from/xhm3u8/")
+//        addVodSource("星海影视", "https://www.xhzy01.com/api.php/provide/vod/from/xhm3u8/")
         // wjm3u8
         addVodSource("无尽影视", "https://api.wujinapi.me/api.php/provide/vod/from/wjm3u8/")
         // ukyun,ukm3u8
@@ -48,9 +48,9 @@ class SuperVodPlugin : Plugin() {
         // wolong
         addVodSource("卧龙影视", "https://collect.wolongzyw.com/api.php/provide/vod/")
         // iva,kkyun
-        addVodSource("速更影视", "https://www.sugengzy.cn/api.php/provide/vod/")
+//        addVodSource("速更影视", "https://www.sugengzy.cn/api.php/provide/vod/")
         // ptm3u8,ptyun
-        addVodSource("阳光影视", "https://www.xxzy.org/api.php/provide/vod/from/ptm3u8/")
+        addVodSource("阳光影视", "https://www.xxzy.org/api.php/provide/vod/from/ptyun/")
         // ikm3u8
         addVodSource("iKun影视", "https://ikunzyapi.com/api.php/provide/vod")
         // yhm3u8
@@ -76,12 +76,12 @@ class SuperVodPlugin : Plugin() {
         registerMainAPI(HaiwaikanProvider())
         // -----------------------------------
         // haiwaikan
-        addVodSource("欧乐影视", "https://www.oulevod.tv/api.php/provide/vod/")
+        addVodSource("欧乐影视", "https://olevodtv.com/api.php/provide/vod/")
         // bjyun,bjm3u8,tkyun,tkm3u8,dbyun,dbm3u8
         // http://104.149.175.67/api.php/provide/vod/
         addVodSource("神马聚合影视", "https://img.smdyw.top/api.php/provide/vod/")
         // kbm3u8,bjm3u8,hnm3u8,haiwaikan
-        addVodSource("考拉TV", "https://ikaola.tv/api.php/provide/vod/")
+//        addVodSource("考拉TV", "https://ikaola.tv/api.php/provide/vod/")
         // wjm3u8,if101,dbm3u8,qiyi,youku,qq,hnm3u8
         addVodSource("影图影视", "https://cj.vodimg.top/api.php/provide/vod/")
         // wjm3u8,fsm3u8,bjm3u8
