@@ -93,6 +93,8 @@ class SuperVodPlugin : Plugin() {
         addVodSource("789盘影视", "https://www.rrvipw.com/api.php/provide/vod/")
         addVodSource("韦青影视", "https://lehootv.com/api.php/provide/vod/")
         addVodSource("网民影视", "https://www.prinevillesda.org/api.php/provide/vod/")
+        // mahua,123kum3u8,kbm3u8
+//        addVodSource("飘花影视", "http://www.zzrhgg.com/api.php/provide/vod/")
     }
 
     private fun addVodSource(
