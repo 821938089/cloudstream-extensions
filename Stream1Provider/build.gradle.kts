@@ -1,5 +1,5 @@
 // use an integer for version numbers
-version = 2
+version = 1
 
 
 cloudstream {
@@ -21,5 +21,5 @@ cloudstream {
         "Live",
     )
 
-    iconUrl = "https://www.google.com/s2/favicons?domain=rainostreams.com&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=1stream.eu&sz=%size%"
 }

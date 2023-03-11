@@ -12,7 +12,7 @@ class RainoStreamsProvider : MainAPI() {
     )
     override var lang = "en"
 
-    override var mainUrl = "http://rainostreams.com/"
+    override var mainUrl = "http://rainostreams.com"
     override var name = "RainoStreams"
 
     override val hasMainPage = true
@@ -49,7 +49,7 @@ class RainoStreamsProvider : MainAPI() {
             }
         }
 
-        return newHomePageResponse(request.name, items)
+        return newHomePageResponse(request.name, items, false)
     }
 
     private fun PEEvent.toSearchResult(type: String): SearchResponse? {
@@ -109,7 +109,7 @@ class RainoStreamsProvider : MainAPI() {
                 name,
                 name,
                 url,
-                data.substring(0, data.indexOf("/", 8)) + "/",
+                data.substring(0, data.indexOf("/", 8) + 1),
                 Qualities.Unknown.value,
                 true
             )
