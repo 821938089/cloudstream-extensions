@@ -12,7 +12,7 @@ import okhttp3.Response
 import okio.ByteString.Companion.encode
 import java.util.concurrent.ConcurrentHashMap
 
-class BollywoodProvider : MainAPI() {
+open class BollywoodProvider : MainAPI() {
     override val supportedTypes = setOf(
         TvType.Movie,
         TvType.TvSeries,
@@ -24,7 +24,7 @@ class BollywoodProvider : MainAPI() {
 
     override val hasMainPage = true
 
-    private val api = "https://simpleprogramapi.zindex.eu.org"
+    open val api = "https://simpleprogramapi.zindex.eu.org"
     private var apiConfig: ApiConfig? = null
         get() {
             field?.let {
@@ -36,22 +36,26 @@ class BollywoodProvider : MainAPI() {
             return field
         }
 
-    override val mainPage = mainPageOf(
-        "$api/0:/Bollywood.Hindi/" to "Bollywood Hindi Movies",
-        "$api/0:/Hollywood.Hindi/" to "Hollywood Hindi Movies",
-        "$api/0:/South.Indian.Hindi/" to "South Indian Hindi Movies",
-        "$api/0:/Web.Series.Hindi/" to "Web Series Hindi",
-        "$api/0:/Kids.Zone.Hindi/" to "Kids Zone Hindi Movies",
-        "$api/3:/" to "Punjabi Movies"
-    )
+    override val mainPage by lazy {
+        mainPageOf(
+            "$api/0:/Bollywood.Hindi/" to "Bollywood Hindi Movies",
+            "$api/0:/Hollywood.Hindi/" to "Hollywood Hindi Movies",
+            "$api/0:/South.Indian.Hindi/" to "South Indian Hindi Movies",
+            "$api/0:/Web.Series.Hindi/" to "Web Series Hindi",
+            "$api/0:/Kids.Zone.Hindi/" to "Kids Zone Hindi Movies",
+            "$api/3:/" to "Punjabi Movies"
+        )
+    }
 
     private val nextPageToken = ConcurrentHashMap<String, String>()
 
-    private val headers = mapOf(
-        "Referer" to "$mainUrl/",
-        "Origin" to mainUrl,
-        "cf_cache_token" to "UKsVpQqBMxB56gBfhYKbfCVkRIXMh42pk6G4DdkXXoVh7j4BjV"
-    )
+    private val headers by lazy {
+        mapOf(
+            "Referer" to "$mainUrl/",
+            "Origin" to mainUrl,
+            "cf_cache_token" to "UKsVpQqBMxB56gBfhYKbfCVkRIXMh42pk6G4DdkXXoVh7j4BjV"
+        )
+    }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         if (page == 1) {
