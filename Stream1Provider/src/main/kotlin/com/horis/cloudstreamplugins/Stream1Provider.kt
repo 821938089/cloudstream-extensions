@@ -43,8 +43,9 @@ class Stream1Provider : MainAPI() {
     private fun Element.toSearchResult(): SearchResponse? {
         val title = select("h4").text()
         val url = attr("href")
+        val time = select(".media-body p").text()
 
-        return newAnimeSearchResponse(title, Match(title, url).toJson()) {
+        return newAnimeSearchResponse(title, Match(title, url, time).toJson()) {
             posterUrl = select("img").attr("src")
         }
     }
@@ -61,7 +62,9 @@ class Stream1Provider : MainAPI() {
             name = title
         })
 
-        return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes)
+        return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
+            plot = match.time
+        }
     }
 
     override suspend fun loadLinks(
@@ -114,7 +117,8 @@ class Stream1Provider : MainAPI() {
 
     data class Match(
         val name: String,
-        val url: String
+        val url: String,
+        val time: String
     )
 
 }
