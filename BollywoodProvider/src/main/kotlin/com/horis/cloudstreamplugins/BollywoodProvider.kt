@@ -11,6 +11,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import okio.ByteString.Companion.encode
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.experimental.xor
 
 open class BollywoodProvider : MainAPI() {
     override val supportedTypes = setOf(
@@ -57,6 +58,8 @@ open class BollywoodProvider : MainAPI() {
         )
     }
 
+    private val secretkey = "ZE6!!7=wTU#.pV[9]QXGB0xWoTfXtWJ)C\$QmrQTIPIYdfM\$7]"
+
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         if (page == 1) {
             apiConfig = null
@@ -76,7 +79,7 @@ open class BollywoodProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse>? {
-        val url = "$api//0:search?q=$query&page_token=&page_index=0"
+        val url = "$api/0:search?q=$query&page_token=&page_index=0"
         val gdIndex = app.get(url, headers = headers).parsedSafe<GDIndex>()
             ?: throw ErrorLoadingException("parse index data fail (search)")
 
@@ -90,6 +93,12 @@ open class BollywoodProvider : MainAPI() {
         var seasons: List<SeasonData>? = null
 
         val episodes = if (file.isFolder) {
+            if (file.parentFolder == null) {
+                val path = id2Path(file.id).let {
+                    it.substring(0, it.lastIndexOf("/", it.lastIndex - 1))
+                }
+                file.parentFolder = "$api/0:$path/"
+            }
             val items = listDir(file)
             val folders = items.filter { it.isFolder }
             val files = items.filter { !it.isFolder }
@@ -198,6 +207,35 @@ var arrayofworkers = (.*)""".toRegex()
         return files
     }
 
+    private suspend fun id2Path(id: String): String {
+        val text = app.get("$api/0:id2path?id=${myCipher(id)}", headers = headers).text
+        return tryParseJson<Path>(myDecipher(text))?.path
+            ?: throw ErrorLoadingException("parse path data fail (id2path)")
+    }
+
+    private fun myCipher(str: String): String {
+        return str.toByteArray().map {
+            secretkey.toByteArray().fold(it) { a, b ->
+                a xor b
+            }
+        }.joinToString("") {
+            "0${it.toString(16)}".let { s ->
+                s.substring(s.length - 2)
+            }
+        }
+    }
+
+    private fun myDecipher(str: String): String {
+        val bytes = ".{1,2}".toRegex().findAll(str).map {
+            it.value.toByte(16)
+        }.map {
+            secretkey.toByteArray().fold(it) { a, b ->
+                a xor b
+            }
+        }.toList().toByteArray()
+        return String(bytes)
+    }
+
     @Suppress("ObjectLiteralToLambda")
     override fun getVideoInterceptor(extractorLink: ExtractorLink): Interceptor {
         return object : Interceptor {
@@ -237,6 +275,10 @@ var arrayofworkers = (.*)""".toRegex()
         val country: String,
         val downloadTime: String,
         val workers: List<String>
+    )
+
+    data class Path(
+        val path: String
     )
 
 }
