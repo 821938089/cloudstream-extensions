@@ -44,6 +44,12 @@ class GDIndexProvider : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse>? {
+        if (cacheFiles.isEmpty()) {
+            rootPageData = listDir("$mainUrl/").filter { it.isFolder }
+            rootPageData.amap {
+                cacheFiles[it] = listDir(it)
+            }
+        }
         val files = arrayListOf<GDFile>()
         cacheFiles.forEach { (_, fs) ->
             fs.forEach {
