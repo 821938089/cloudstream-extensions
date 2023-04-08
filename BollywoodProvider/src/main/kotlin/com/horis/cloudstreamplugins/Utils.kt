@@ -37,4 +37,6 @@ val app = Requests(responseParser = JSONParser).apply {
     defaultHeaders = mapOf("User-Agent" to USER_AGENT)
 }
 
-
+fun String.substring(left: String, right: String): String {
+    return substringAfter(left).substringBefore(right)
+}
