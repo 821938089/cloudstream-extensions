@@ -13,6 +13,7 @@ class BollywoodPlugin : Plugin() {
         registerMainAPI(HollywoodProvider())
         registerMainAPI(GDIndexProvider())
         registerMainAPI(ShinobiCloudProvider())
+        registerMainAPI(NGIndexProvider())
 //        loadCryptoJs()
     }
 
