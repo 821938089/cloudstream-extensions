@@ -6,6 +6,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.SubtitleHelper
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.net.URLDecoder
@@ -29,6 +30,9 @@ class NGIndexProvider : MainAPI() {
     private var rootPageData = emptyList<NGFile>()
 
     private val cacheFiles = hashMapOf<NGFile, List<NGFile>>()
+
+    private val videoFileRegex = "(?i)\\.(mkv|mp4|ts|webm)$".toRegex()
+    private val subtitleFileRegex = "(?i)\\.(srt|ssa|ass|vtt|ttml)$".toRegex()
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         if (rootPageData.isEmpty()) {
@@ -74,13 +78,13 @@ class NGIndexProvider : MainAPI() {
             val items = listDir(file)
             val folders = items.filter { it.isFolder }
             val files =
-                items.filter { !it.isFolder && it.name.contains("(?i)\\.(mkv|mp4)$".toRegex()) }
+                items.filter { !it.isFolder && it.name.contains(videoFileRegex) }
             seasons = folders.mapIndexed { i, f ->
                 SeasonData(i + 1, "S\\d+".toRegex().find(f.name)?.value ?: f.name)
             }
             folders.amapIndexed { index, gdFile ->
                 listDir(gdFile).mapNotNull {
-                    if (!it.name.contains("(?i)\\.(mkv|mp4)$".toRegex())) return@mapNotNull null
+                    if (!it.name.contains(videoFileRegex)) return@mapNotNull null
                     newEpisode(it) {
                         name = "E\\d+".toRegex().find(it.name)?.value ?: it.name
                         season = index + 1
@@ -100,6 +104,13 @@ class NGIndexProvider : MainAPI() {
             })
         }
 
+        @Suppress("ObjectLiteralToLambda")
+        episodes.sortWith(object : Comparator<Episode> {
+            override fun compare(o1: Episode, o2: Episode): Int {
+                return AlphanumComparator.compare(o1.name!!, o2.name!!)
+            }
+        })
+
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             seasonNames = seasons
         }
@@ -112,6 +123,12 @@ class NGIndexProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val file = parseJson<NGFile>(data)
+        listDir(file.parentFolder).filter {
+            it.name.contains(subtitleFileRegex)
+        }.map {
+            SubtitleFile(it.name, it.path)
+        }.forEach(subtitleCallback)
+
         val path = file.path
         callback(
             ExtractorLink(
@@ -178,9 +195,9 @@ class NGIndexProvider : MainAPI() {
         val parentFolder: String,
     ) {
         val path
-            get() = "$parentFolder${
+            get() = ("$parentFolder${
                 name.replace("#", "%23").replace("?", "%3F")
-            }" + if (isFolder) "/" else ""
+            }" + if (isFolder) "/" else "").replace(" ", "%20")
     }
 
 }
