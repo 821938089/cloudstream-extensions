@@ -83,7 +83,7 @@ open class BollywoodProvider : MainAPI() {
         val gdIndex = app.get(url, headers = headers).parsedSafe<GDIndex>()
             ?: throw ErrorLoadingException("parse index data fail (search)")
 
-        return gdIndex.data.files.toSearchResponseList()
+        return gdIndex.data.files.sortedWith(GDFileCompare).toSearchResponseList()
     }
 
     override suspend fun load(url: String): LoadResponse? {
@@ -280,5 +280,15 @@ var arrayofworkers = (.*)""".toRegex()
     data class Path(
         val path: String
     )
+
+    object GDFileCompare : Comparator<GDFile> {
+        override fun compare(o1: GDFile, o2: GDFile): Int {
+            return when {
+                o1.isFolder && !o2.isFolder -> -1
+                !o1.isFolder && o2.isFolder -> 1
+                else -> 0
+            }
+        }
+    }
 
 }
