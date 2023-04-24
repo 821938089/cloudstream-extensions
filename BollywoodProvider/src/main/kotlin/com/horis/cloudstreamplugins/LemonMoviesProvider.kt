@@ -105,7 +105,9 @@ class LemonMoviesProvider : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse>? {
         if (cacheFiles.isEmpty()) {
-            rootPageData = listDir("$mainUrl/").filter { it.isFolder && it.name != "ftp" }
+            rootPageData = listDir("$mainUrl/Data/").filter {
+                it.isFolder && !excludeFile.contains(it.name)
+            }
             rootPageData.amap { file ->
                 cacheFiles[file] = listDir(file) { f, d ->
                     if (d < 1) return@listDir true
