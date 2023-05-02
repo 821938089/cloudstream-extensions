@@ -15,6 +15,7 @@ class BollywoodPlugin : Plugin() {
         registerMainAPI(ShinobiCloudProvider())
         registerMainAPI(NGIndexProvider())
         registerMainAPI(LemonMoviesProvider())
+        registerMainAPI(TGArchiveProvider())
 //        loadCryptoJs()
     }
 
