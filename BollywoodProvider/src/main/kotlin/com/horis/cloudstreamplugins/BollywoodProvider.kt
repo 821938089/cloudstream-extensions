@@ -148,7 +148,9 @@ open class BollywoodProvider : MainAPI() {
         val encryptedExpiry = base64Encode(CryptoAES.encrypt(key, expiry).toByteArray())
         val worker = apiConfig?.workers?.random()
             ?: throw ErrorLoadingException("worker not found.")
-        val link = "https://api.$worker.workers.dev/public.php" +
+        val serviceName = apiConfig?.serviceName?.random()
+            ?: throw ErrorLoadingException("serviceName not found.")
+        val link = "https://$serviceName.$worker.workers.dev/public.php" +
                 "?file=$encryptedId&expiry=$encryptedExpiry&mac=$hmacSign"
         callback(
             ExtractorLink(
@@ -174,9 +176,10 @@ open class BollywoodProvider : MainAPI() {
     }
 
     private suspend fun getConfig(): ApiConfig {
-        val regex = """const country = "(.*?)";
-const downloadtime = "(.*?)";
-var arrayofworkers = (.*)""".toRegex()
+        val regex = """const country = "(.*?)"
+const downloadtime = "(.*?)"
+const arrayofworkers = (.*)
+const service_name = (.*)""".toRegex()
         val js = app.get(
             "https://geolocation.zindex.eu.org/api.js",
             referer = "$mainUrl/",
@@ -186,8 +189,10 @@ var arrayofworkers = (.*)""".toRegex()
         val downloadTime = match.groupValues[2]
         val workers = tryParseJson<List<String>>(match.groupValues[3])
             ?: throw ErrorLoadingException("parse api config fail (workers)")
+        val serviceName = tryParseJson<List<String>>(match.groupValues[4])
+            ?: throw ErrorLoadingException("parse api config fail (serviceName)")
 
-        return ApiConfig(country, downloadTime, workers)
+        return ApiConfig(country, downloadTime, workers, serviceName)
     }
 
     private suspend fun listDir(file: GDFile): List<GDFile> {
@@ -274,7 +279,8 @@ var arrayofworkers = (.*)""".toRegex()
     data class ApiConfig(
         val country: String,
         val downloadTime: String,
-        val workers: List<String>
+        val workers: List<String>,
+        val serviceName: List<String>
     )
 
     data class Path(
