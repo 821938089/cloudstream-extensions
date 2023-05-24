@@ -27,7 +27,7 @@ class TGArchiveProvider : MainAPI() {
     )
 
     private val api = "https://api.tgarchive.superfastsearch.zindex.eu.org"
-    private val downloadApi = "https://tgdownloads.dltelegram.workers.dev"
+    private val downloadApi = "https://hashhackers.dltelegram.workers.dev/"
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         return newHomePageResponse("Home", getFiles(page).toSearchResponseList())
@@ -58,17 +58,29 @@ class TGArchiveProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val file = parseJson<GDFile>(data)
-        val path = "$downloadApi/tgarchive/${file._id}"
+        val token = getToken()
+        val path = "$downloadApi/tgarchive/${file._id}?token=$token"
         callback(
             ExtractorLink(
                 name,
                 name,
                 path,
-                "",
+                "$mainUrl/",
                 Qualities.Unknown.value,
             )
         )
         return true
+    }
+
+    suspend fun getToken(): String {
+        val regex = """var newtime = "(.*?)"""".toRegex()
+        val js = app.get(
+            "https://geolocation.zindex.eu.org/api.js",
+            referer = "$mainUrl/",
+        ).text
+        val match = regex.find(js) ?: throw ErrorLoadingException("parse api config fail")
+        val newTime = match.groupValues[1]
+        return newTime.reversed()
     }
 
     private fun List<GDFile>.toSearchResponseList(): List<SearchResponse> {
@@ -77,18 +89,18 @@ class TGArchiveProvider : MainAPI() {
         }
     }
 
-    @Suppress("ObjectLiteralToLambda")
-    override fun getVideoInterceptor(extractorLink: ExtractorLink): Interceptor {
-        return object : Interceptor {
-            override fun intercept(chain: Interceptor.Chain): Response {
-                val request = chain.request()
-                    .newBuilder()
-                    .removeHeader("referer")
-                    .build()
-                return chain.proceed(request)
-            }
-        }
-    }
+//    @Suppress("ObjectLiteralToLambda")
+//    override fun getVideoInterceptor(extractorLink: ExtractorLink): Interceptor {
+//        return object : Interceptor {
+//            override fun intercept(chain: Interceptor.Chain): Response {
+//                val request = chain.request()
+//                    .newBuilder()
+//                    .removeHeader("referer")
+//                    .build()
+//                return chain.proceed(request)
+//            }
+//        }
+//    }
 
     private fun error(msg: String = "加载数据失败"): Nothing {
         throw ErrorLoadingException(msg)
