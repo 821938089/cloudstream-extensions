@@ -150,7 +150,7 @@ open class BollywoodProvider : MainAPI() {
             ?: throw ErrorLoadingException("worker not found.")
         val serviceName = apiConfig?.serviceName?.random()
             ?: throw ErrorLoadingException("serviceName not found.")
-        val link = "https://$serviceName.$worker.workers.dev/public.php" +
+        val link = "https://$serviceName.$worker.workers.dev/download.aspx" +
                 "?file=$encryptedId&expiry=$encryptedExpiry&mac=$hmacSign"
         callback(
             ExtractorLink(
@@ -177,6 +177,8 @@ open class BollywoodProvider : MainAPI() {
 
     private suspend fun getConfig(): ApiConfig {
         val regex = """const country = "(.*?)"
+const time = ".*?"
+var newtime = ".*?"
 const downloadtime = "(.*?)"
 const arrayofworkers = (.*)
 const service_name = (.*)""".toRegex()

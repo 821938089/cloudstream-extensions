@@ -72,7 +72,7 @@ class TGArchiveProvider : MainAPI() {
         return true
     }
 
-    suspend fun getToken(): String {
+    private suspend fun getToken(): String {
         val regex = """var newtime = "(.*?)"""".toRegex()
         val js = app.get(
             "https://geolocation.zindex.eu.org/api.js",
