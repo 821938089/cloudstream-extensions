@@ -50,7 +50,7 @@ open class BollywoodProvider : MainAPI() {
 
     private val nextPageToken = ConcurrentHashMap<String, String>()
 
-    private val headers by lazy {
+    val headers by lazy {
         mapOf(
             "Referer" to "$mainUrl/",
             "Origin" to mainUrl,
@@ -59,6 +59,7 @@ open class BollywoodProvider : MainAPI() {
     }
 
     private val secretkey = "ZE6!!7=wTU#.pV[9]QXGB0xWoTfXtWJ)C\$QmrQTIPIYdfM\$7]"
+    val videoFileRegex = "(?i)\\.(mkv|mp4|ts|webm)$".toRegex()
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         if (page == 1) {
@@ -68,8 +69,10 @@ open class BollywoodProvider : MainAPI() {
         val url =
             "${request.data}?password=&page_token=${nextPageToken[request.name] ?: ""}&page_index=${page - 1}&_=${System.currentTimeMillis()}"
 
-        val gdIndex = app.get(url, headers = headers).parsedSafe<GDIndex>()
-            ?: throw ErrorLoadingException("parse index data fail (mainpage)")
+        val res = app.get(url, headers = headers)
+        val body = res.okhttpResponse.peekBody(1024).string()
+        val gdIndex = res.parsedSafe<GDIndex>()
+            ?: throw ErrorLoadingException("parse index data fail (mainpage)\n$body")
         gdIndex.nextPageToken?.let { nextPageToken[request.name] = it }
         gdIndex.data.files.forEach { it.parentFolder = request.data }
 
@@ -94,19 +97,20 @@ open class BollywoodProvider : MainAPI() {
 
         val episodes = if (file.isFolder) {
             if (file.parentFolder == null) {
-                val path = id2Path(file.id).let {
+                val path = id2Path(file).let {
                     it.substring(0, it.lastIndexOf("/", it.lastIndex - 1))
                 }
                 file.parentFolder = "$api/0:$path/"
             }
             val items = listDir(file)
             val folders = items.filter { it.isFolder }
-            val files = items.filter { !it.isFolder }
+            val files = items.filter { !it.isFolder && it.name.contains(videoFileRegex) }
             seasons = folders.mapIndexed { i, f ->
                 SeasonData(i + 1, "S\\d+".toRegex().find(f.name)?.value ?: f.name)
             }
             folders.amapIndexed { index, gdFile ->
-                listDir(gdFile).map {
+                listDir(gdFile).mapNotNull {
+                    if (!it.name.contains(videoFileRegex)) return@mapNotNull null
                     newEpisode(it) {
                         name = "E\\d+".toRegex().find(it.name)?.value ?: it.name
                         season = index + 1
@@ -197,7 +201,7 @@ const service_name = (.*)""".toRegex()
         return ApiConfig(country, downloadTime, workers, serviceName)
     }
 
-    private suspend fun listDir(file: GDFile): List<GDFile> {
+    suspend fun listDir(file: GDFile): List<GDFile> {
         var nextPageToken = ""
         var page = 0
         val files = arrayListOf<GDFile>()
@@ -214,7 +218,8 @@ const service_name = (.*)""".toRegex()
         return files
     }
 
-    private suspend fun id2Path(id: String): String {
+    open suspend fun id2Path(file: GDFile): String {
+        val id = file.id
         val text = app.get("$api/0:id2path?id=${myCipher(id)}", headers = headers).text
         return tryParseJson<Path>(myDecipher(text))?.path
             ?: throw ErrorLoadingException("parse path data fail (id2path)")
@@ -268,6 +273,7 @@ const service_name = (.*)""".toRegex()
     )
 
     data class GDFile(
+        val driveId: String?,
         val id: String,
         val mimeType: String?,
         val modifiedTime: String?,
