@@ -10,11 +10,11 @@ import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newTvSeriesLoadResponse
 import com.lagradost.cloudstream3.utils.AppUtils
 
-class EducationInRussiaProvider : BollywoodProvider() {
+class UltimateCourseProvider : BollywoodProvider() {
     override var lang = "en"
 
     override var mainUrl = "https://educationinrussia.pages.dev"
-    override var name = "EducationInRussia"
+    override var name = "UltimateCourse"
 
     override val api = "https://courses.zindex.eu.org"
 
