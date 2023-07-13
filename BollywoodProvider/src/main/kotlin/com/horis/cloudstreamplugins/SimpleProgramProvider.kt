@@ -260,15 +260,13 @@ class SimpleProgramProvider : MainAPI() {
             "timestamp" to System.currentTimeMillis()
         )
 
-        val files = app.post(
+        val res = app.post(
             "$api/drive",
             headers = headers,
             requestBody = postData.toJson().toRequestBody("application/json".toMediaType())
-        ).parsed<List<*>>().map {
-            parseJson<GDFile>(it!!.toJson())
-        }
+        )
 
-        return files
+        return res.parse()
     }
 
     override suspend fun loadLinks(
