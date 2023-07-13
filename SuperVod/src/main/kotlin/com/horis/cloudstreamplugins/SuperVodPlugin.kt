@@ -21,12 +21,12 @@ class SuperVodPlugin : Plugin() {
         // 1080zyk
         addVodSource("优质影视", "https://api.1080zyku.com/inc/apijson.php/provide/vod/")
         // kdyun,kdm3u8
-        addVodSource("酷点影视", "https://kudian10.com/api.php/provide/vod/from/kdm3u8/")
-        addVodSource("酷点影视2", "https://api.kuapi.cc/api.php/provide/vod/from/kdm3u8/")
+//        addVodSource("酷点影视", "https://kudian10.com/api.php/provide/vod/from/kdm3u8/")
+//        addVodSource("酷点影视2", "https://api.kuapi.cc/api.php/provide/vod/from/kdm3u8/")
         // kjj,kuaiyun
-        addVodSource("快竞技", "https://api.kjjapi.com/api.php/provide/vod/from/kjj/")
+//        addVodSource("快竞技", "https://api.kjjapi.com/api.php/provide/vod/from/kjj/")
         // foxyun,foxm3u8
-        addVodSource("Fox影视", "https://api.foxzyapi.com/api.php/provide/vod/from/foxm3u8/")
+//        addVodSource("Fox影视", "https://api.foxzyapi.com/api.php/provide/vod/from/foxm3u8/")
         // liangzi,lzm3u8
         addVodSource("量子影视", "https://cj.lziapi.com/api.php/provide/vod/from/lzm3u8/")
         // fsyun,fsm3u8
@@ -34,7 +34,7 @@ class SuperVodPlugin : Plugin() {
         // hnm3u8,hnyun
         addVodSource("红牛影视", "https://www.hongniuzy2.com/api.php/provide/vod/from/hnm3u8/")
         // kbzy,kbm3u8
-        addVodSource("快播影视", "https://www.kuaibozy.com/api.php/provide/vod/from/kbm3u8/")
+//        addVodSource("快播影视", "https://www.kuaibozy.com/api.php/provide/vod/from/kbm3u8/")
         // bjyun,bjm3u8
         addVodSource("八戒影视", "https://cj.bajiecaiji.com/inc/api.php/provide/vod/", 1)
         // tpiframe,tpm3u8
@@ -57,6 +57,7 @@ class SuperVodPlugin : Plugin() {
         addVodSource("樱花影视", "https://m3u8.apiyhzy.com/api.php/provide/vod/")
 //        addVodSource("樱花影视2", "https://yhzy.cc/api.php/provide/vod/")
         // jinyingm3u8,jinyingyun
+        // https://jyzyapi.com/provide/vod/from/jinyingm3u8/
         addVodSource("金鹰影视", "https://jinyingzy.com/provide/vod/from/jinyingm3u8/")
         // sdyun,sdm3u8
         addVodSource("闪电影视", "https://sdzyapi.com/api.php/provide/vod/from/sdm3u8/")
@@ -74,8 +75,24 @@ class SuperVodPlugin : Plugin() {
 //        addVodSource("极客影视", "https://jkzy1.com/api.php/provide/vod/from/zkzym3u8/")
         // haiwaikan
         registerMainAPI(HaiwaikanProvider())
+//        addVodSource {
+//            // ckm3u8
+//            name = "CK影视"
+//            apiUrl = "http://feifei67.com/api.php/provide/vod/"
+//        }
+        addVodSource {
+            // mkyun,mkm3u8
+            name = "手机韩剧影视"
+            apiUrl = "https://77hanju.com/api.php/provide/vod/from/mkm3u8/"
+        }
+        addVodSource {
+            // jsyun,jsm3u8
+            name = "极速影视"
+            apiUrl = "https://jszyapi.com/api.php/provide/vod/from/jsm3u8/"
+        }
         // -----------------------------------
         // haiwaikan
+        // https://olevod1.com/api.php/provide/vod/
         addVodSource("欧乐影视", "https://olevodtv.com/api.php/provide/vod/")
         // bjyun,bjm3u8,tkyun,tkm3u8,dbyun,dbm3u8
         // http://104.149.175.67/api.php/provide/vod/
@@ -89,12 +106,31 @@ class SuperVodPlugin : Plugin() {
         // zuidam3u8,zuidall,kbm3u8
         addVodSource("蓝光影视", "http://www.zzrhgg.com/api.php/provide/vod/")
         // haiwaikan
-        addVodSource("1080P影视", "https://1080p.tv/api.php/provide/vod/")
+//        addVodSource("1080P影视", "https://1080p.tv/api.php/provide/vod/")
         addVodSource("789盘影视", "https://www.rrvipw.com/api.php/provide/vod/")
-        addVodSource("韦青影视", "https://lehootv.com/api.php/provide/vod/")
-        addVodSource("网民影视", "https://www.prinevillesda.org/api.php/provide/vod/")
+//        addVodSource("韦青影视", "https://lehootv.com/api.php/provide/vod/")
+//        addVodSource("网民影视", "https://www.prinevillesda.org/api.php/provide/vod/")
         // mahua,123kum3u8,kbm3u8
 //        addVodSource("飘花影视", "http://www.zzrhgg.com/api.php/provide/vod/")
+        addVodSource {
+            // wjm3u8,bjm3u8,hnm3u8
+            name = "39影视"
+            apiUrl = "https://www.394tv.com/api.php/provide/vod/"
+        }
+        addVodSource {
+            // wjyun,wjm3u8
+            name = "飘零影视"
+            apiUrl = "https://p2100.net/api.php/provide/vod/"
+        }
+        addVodSource {
+            // ffm3u8,haiwaikan,ZNJSON,znkan
+            name = "映迷影视"
+            apiUrl = "https://www.inmi.app/api.php/provide/vod/"
+        }
+    }
+
+    private fun addVodSource(builder: VodSource.() -> Unit) {
+        addVodSource(VodSource().apply(builder))
     }
 
     private fun addVodSource(
@@ -105,7 +141,7 @@ class SuperVodPlugin : Plugin() {
         addVodSource(name, apiUrl, 0, responseType)
     }
 
-    fun addVodSource(vodSource: VodSource) {
+    private fun addVodSource(vodSource: VodSource) {
         with(vodSource) {
             addVodSource(name, apiUrl, apiType, responseType)
         }

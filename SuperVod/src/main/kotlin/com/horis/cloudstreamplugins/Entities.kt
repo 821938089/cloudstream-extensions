@@ -1,7 +1,6 @@
 package com.horis.cloudstreamplugins
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.lagradost.nicehttp.NiceResponse
 
 data class Vod(
     @JsonProperty("vod_id") val id: Int? = null,
@@ -47,8 +46,8 @@ data class PlayerInfo(
 )
 
 data class VodSource(
-    val name: String,
-    val apiUrl: String,
-    val apiType: Int = 0,
-    val responseType: Int = 0
+    var name: String = "",
+    var apiUrl: String = "",
+    var apiType: Int = 0,
+    var responseType: Int = 0
 )
