@@ -5,7 +5,7 @@ import com.horis.cloudstreamplugins.Vod
 
 interface VodAPIExtractor {
 
-    suspend fun getCategory(limit: Int = 7): List<Category> {
+    suspend fun getCategory(limit: Int = 7, skip: Int = 0): List<Category> {
         throw NotImplementedError()
     }
 

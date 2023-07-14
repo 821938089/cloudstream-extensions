@@ -90,6 +90,49 @@ class SuperVodPlugin : Plugin() {
             name = "极速影视"
             apiUrl = "https://jszyapi.com/api.php/provide/vod/from/jsm3u8/"
         }
+        addVodSource {
+            // bfzym3u8
+            name = "暴风影视"
+            apiUrl = "https://bfzyapi.com/api.php/provide/vod/"
+        }
+        addVodSource {
+            // subyun,subm3u8
+            name = "速播影视"
+            apiUrl = "https://subocaiji.com/api.php/provide/vod/from/subm3u8/"
+        }
+        addVodSource {
+            // xlyun,xlm3u8
+            name = "新浪影视"
+            apiUrl = "https://api.xinlangapi.com/xinlangapi.php/provide/vod/from/xlm3u8/"
+        }
+        addVodSource {
+            // kuaikan,kuaikanyun
+            name = "快看影视"
+            apiUrl = "https://kuaikan-api.com/api.php/provide/vod/from/kuaikan/"
+            skipCategory = 9
+        }
+        addVodSource {
+            // okm3u8
+            name = "OK影视"
+            apiUrl = "https://okzy1.tv/api.php/provide/vod/"
+        }
+        addVodSource {
+            // qhyun,qhm3u8
+            name = "奇虎影视"
+            apiUrl = "https://caiji.qhzyapi.com/api.php/provide/vod/from/qhm3u8/"
+        }
+        addVodSource {
+            // damo,M3U8
+            name = "大漠影视"
+            apiUrl = "https://damozy.com/api.php/provide/vod/from/M3U8/"
+        }
+        addVodSource {
+            // 68zy_yun,68zy_m3u8
+            name = "68影视"
+            apiUrl = "https://caiji.68zyapi.com/api.php/provide/vod/from/68zy_m3u8/"
+        }
+        //registerMainAPI(JiangNanProvider())
+
         // -----------------------------------
         // haiwaikan
         // https://olevod1.com/api.php/provide/vod/
@@ -138,27 +181,21 @@ class SuperVodPlugin : Plugin() {
         apiUrl: String,
         responseType: Int = 0
     ) {
-        addVodSource(name, apiUrl, 0, responseType)
-    }
-
-    private fun addVodSource(vodSource: VodSource) {
-        with(vodSource) {
-            addVodSource(name, apiUrl, apiType, responseType)
-        }
+        addVodSource(VodSource(name, apiUrl, 0, responseType))
     }
 
     private fun addVodSource(
-        name: String,
-        apiUrl: String,
-        apiType: Int = 0,
-        responseType: Int = 0
+        vodSource: VodSource
     ) {
-        val apiExtractor = makeApiExtractor(apiUrl, apiType, responseType)
-        val provider = object : BaseVodProvider() {
-            override val apiExtractor = apiExtractor
-            override var name = name
+        vodSource.run {
+            val apiExtractor = makeApiExtractor(apiUrl, apiType, responseType)
+            val provider = object : BaseVodProvider() {
+                override val apiExtractor = apiExtractor
+                override var name: String = this@run.name
+                override val skipCategory = this@run.skipCategory
+            }
+            registerMainAPI(provider)
         }
-        registerMainAPI(provider)
     }
 }
 

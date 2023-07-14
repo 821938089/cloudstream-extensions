@@ -12,7 +12,7 @@ import java.net.URLEncoder
 class CollectXMLExtractor(val api: VodAPI) : VodAPIExtractor {
     var categoryCache: List<Category>? = null
 
-    override suspend fun getCategory(limit: Int): List<Category> {
+    override suspend fun getCategory(limit: Int, skip: Int): List<Category> {
         categoryCache?.let { return it }
         val xml = api.list().text
         categoryCache = CategoryList(xml).list?.take(8)
@@ -31,7 +31,6 @@ class CollectXMLExtractor(val api: VodAPI) : VodAPIExtractor {
         return VodList(xml).list
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getVodListDetail(
         query: String?,
         page: Int,
@@ -62,11 +61,11 @@ class CollectXMLExtractor(val api: VodAPI) : VodAPIExtractor {
                 val actor = (it.selectFirst("actor")?.childNode(0) as CDataNode).text()
                 val director = (it.selectFirst("director")?.childNode(0) as CDataNode).text()
                 val playData = it.select("dl dd")
-                val playFrom = playData.joinToString("$$$") {
-                    it.attr("flag")
+                val playFrom = playData.joinToString("$$$") { el ->
+                    el.attr("flag")
                 }
-                val playUrl = playData.joinToString("$$$") {
-                    (it.childNode(0) as CDataNode).text()
+                val playUrl = playData.joinToString("$$$") { el ->
+                    (el.childNode(0) as CDataNode).text()
                 }
                 val blurb = (it.selectFirst("des")?.childNode(0) as CDataNode).text()
                 val time = it.selectFirst("last")?.text()

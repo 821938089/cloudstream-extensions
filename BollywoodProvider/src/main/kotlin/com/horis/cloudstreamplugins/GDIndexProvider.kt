@@ -134,10 +134,11 @@ class GDIndexProvider : MainAPI() {
 
     private suspend fun listDir(file: String): List<GDFile> {
         val doc = app.get(file, headers = headers).document
-        val files = doc.select(".listing .file").map {
+        val files = doc.select("a").map {
+            val filename = it.text()
             GDFile(
-                name = it.select("a").text().removeSuffix("/"),
-                isFolder = it.select("use").attr("xlink:href") == "#folder",
+                name = filename.removeSuffix("/"),
+                isFolder = filename.endsWith("/"),
                 parentFolder = file
             )
         }

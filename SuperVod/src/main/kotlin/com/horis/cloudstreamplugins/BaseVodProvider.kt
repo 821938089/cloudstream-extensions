@@ -1,6 +1,5 @@
 package com.horis.cloudstreamplugins
 
-import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.AppUtils
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
@@ -31,11 +30,13 @@ abstract class BaseVodProvider : MainAPI() {
     override val mainPage = mutableListOf(MainPageData("", ""))
 
     open val apiExtractor by lazy { makeApiExtractor(mainUrl) }
-    open val playFromFilter = hashSetOf("m3u8")
+    open val playFromFilter = emptySet<String>()
     open val headers = mapOf<String, String>()
+    open val skipCategory = 0
+    open val filterM3U8Url = true
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
-        val categoryList = apiExtractor.getCategory().filter { cat ->
+        val categoryList = apiExtractor.getCategory(skip = skipCategory).filter { cat ->
             nsfwCategory.any { !cat.typeName.contains(it) }
         }
         if (mainPage.first().name.isEmpty()) {
@@ -75,7 +76,6 @@ abstract class BaseVodProvider : MainAPI() {
         return HomePageList(name, homeList)
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun search(query: String): List<SearchResponse>? {
         val vodList = if (query.split(",").all { it.toIntOrNull() != null }) {
             apiExtractor.getVodListDetail(ids = query)
@@ -99,15 +99,15 @@ abstract class BaseVodProvider : MainAPI() {
         val servers = vod.playFrom!!.split("$$$")
 
         loop@ for ((index, vodPlayList) in vod.playUrl!!.split("$$$").withIndex()) {
-//            if (playFromFilter.isNotEmpty() &&
-//                !playFromFilter.any { servers[index].contains(it) }
-//            ) {
-//                continue
-//            }
+            if (playFromFilter.isNotEmpty() &&
+                !playFromFilter.any { servers[index].contains(it) }
+            ) {
+                continue
+            }
             serverNames.add(SeasonData(index + 1, servers[index]))
             for (playInfo in vodPlayList.trimEnd('#').split("#")) {
                 val (episodeName, playUrl) = playInfo.split("$")
-                if (!playInfo.endsWith(".m3u8")) {
+                if (filterM3U8Url && !playUrl.endsWith(".m3u8")) {
                     serverNames.removeLast()
                     continue@loop
                 }

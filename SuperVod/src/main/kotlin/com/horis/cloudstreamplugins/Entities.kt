@@ -49,5 +49,6 @@ data class VodSource(
     var name: String = "",
     var apiUrl: String = "",
     var apiType: Int = 0,
-    var responseType: Int = 0
+    var responseType: Int = 0,
+    var skipCategory: Int = 0
 )

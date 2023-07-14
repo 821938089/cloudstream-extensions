@@ -4,17 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.horis.cloudstreamplugins.Category
 import com.horis.cloudstreamplugins.Vod
 import com.horis.cloudstreamplugins.apis.VodAPI
-import com.horis.cloudstreamplugins.tryParseJson
 import com.lagradost.cloudstream3.ErrorLoadingException
 import java.net.URLEncoder
 
-class CollectAPIExtractor(val api: VodAPI) : VodAPIExtractor {
-    var categoryCache: List<Category>? = null
+class CollectAPIExtractor(private val api: VodAPI) : VodAPIExtractor {
+    private var categoryCache: List<Category>? = null
 
-    override suspend fun getCategory(limit: Int): List<Category> {
+    override suspend fun getCategory(limit: Int, skip: Int): List<Category> {
         categoryCache?.let { return it }
         val res = api.list()
-        categoryCache = res.parsedSafe<CategoryList>()?.list?.take(limit)
+        categoryCache = res.parsedSafe<CategoryList>()?.list?.drop(skip)?.take(limit)
             ?: throw ErrorLoadingException("获取分类数据失败 - 状态码${res.code}")
         return categoryCache!!
     }
@@ -30,7 +29,6 @@ class CollectAPIExtractor(val api: VodAPI) : VodAPIExtractor {
         return api.list(encodedQuery, page, ids, type, pageSize).parsedSafe<VodList>()?.list
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getVodListDetail(
         query: String?,
         page: Int,
