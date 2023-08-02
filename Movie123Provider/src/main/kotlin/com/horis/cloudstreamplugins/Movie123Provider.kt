@@ -67,8 +67,13 @@ class Movie123Provider : MainAPI() {
 
         val episodes = document.select("#iDgkXUZslQ a").map {
             val epsName = it.text()
-            val epsNumber = Regex("(?i)Episode\\s?(\\d+)").find(epsName)?.groupValues?.getOrNull(1)?.toIntOrNull()
-            val epsSeason = Regex("(?i)Season\\s?(\\d+)").find(title)?.groupValues?.getOrNull(1)?.toIntOrNull() ?: 1
+            val epsNumber = Regex("(?i)Episode\\s?(\\d+)").find(epsName)?.groupValues
+                ?.getOrNull(1)
+                ?.toIntOrNull()
+            val epsSeason = Regex("(?i)Season\\s?(\\d+)").find(title)?.groupValues
+                ?.getOrNull(1)
+                ?.toIntOrNull()
+                ?: 1
             newEpisode(it.attr("href")) {
                 name = epsName
                 episode = epsNumber
@@ -82,7 +87,7 @@ class Movie123Provider : MainAPI() {
             }
         }.distinctBy { it.name }
 
-        val type = if(title.contains("Season", true)) TvType.TvSeries else TvType.Movie
+        val type = if (title.contains("Season", true)) TvType.TvSeries else TvType.Movie
 
         return newTvSeriesLoadResponse(title, url, type, episodes) {
             posterUrl = document.select(".XIUyJddvQj img").attr("data-src")
@@ -135,7 +140,7 @@ class Movie123Provider : MainAPI() {
         return true
     }
 
-    private fun String.xorDecrypt(key: String = "123"): String {
+    private fun String.xorDecrypt(key: String = "124"): String {
         val sb = StringBuilder()
         var i = 0
         while (i < this.length) {
