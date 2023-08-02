@@ -9,14 +9,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @SuppressLint("SimpleDateFormat")
-class RainoStreamsProvider : MainAPI() {
+class BDNewsZHProvider : MainAPI() {
     override val supportedTypes = setOf(
         TvType.Live
     )
     override var lang = "en"
 
-    override var mainUrl = "http://rainostreams.com"
-    override var name = "RainoStreams"
+    override var mainUrl = "https://live.bdnewszh.com"
+    override var name = "BDNewsZH"
 
     override val hasMainPage = true
 
@@ -27,7 +27,7 @@ class RainoStreamsProvider : MainAPI() {
         "mlb" to "NCAAF",
         "nba" to "NBA",
         "nhl" to "NHL",
-        "rugby.json" to "Rugby",
+//        "rugby.json" to "Rugby",
         "racing" to "Race",
         "cricket" to "Cricket",
         "mma" to "MMA",
@@ -48,12 +48,13 @@ class RainoStreamsProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         val items = when (val type = request.data) {
-            "rugby.json" -> {
-                val events = app.get(rugbyApi, referer = "$mainUrl/").parsed<RugbyGames>().game
-                events.mapNotNull {
-                    it.toSearchResult()
-                }
-            }
+//            "rugby.json" -> {
+//                val events = app.get(rugbyApi, referer = "$mainUrl/").parsed<RugbyGames>().game
+//                events.mapNotNull {
+//                    it.toSearchResult()
+//                }
+//            }
+
             else -> {
                 val events = app.get("$api$type", referer = "$mainUrl/").parsed<PEEvents>().events
                 events.mapNotNull {
