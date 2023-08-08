@@ -9,15 +9,15 @@ import com.horis.BuildConfig
 class BollywoodPlugin : Plugin() {
     override fun load(context: Context) {
         // All providers should be added in this manner. Please don't edit the providers list directly.
-        registerMainAPI(BollywoodProvider())
-        registerMainAPI(HollywoodProvider())
+//        registerMainAPI(BollywoodProvider())
+//        registerMainAPI(HollywoodProvider())
         registerMainAPI(GDIndexProvider())
         registerMainAPI(ShinobiCloudProvider())
-        registerMainAPI(UltimateCourseProvider())
+//        registerMainAPI(UltimateCourseProvider())
 //        registerMainAPI(NGIndexProvider())
 //        registerMainAPI(LemonMoviesProvider())
 //        registerMainAPI(TGArchiveProvider())
-        registerMainAPI(SimpleProgramProvider())
+//        registerMainAPI(SimpleProgramProvider())
 //        loadCryptoJs()
     }
 
