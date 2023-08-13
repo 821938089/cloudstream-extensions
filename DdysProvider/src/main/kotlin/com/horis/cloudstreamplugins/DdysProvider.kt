@@ -18,7 +18,7 @@ class DdysProvider : MainAPI() {
     )
     override var lang = "zh"
 
-    override var mainUrl = "https://ddys.tv"
+    override var mainUrl = "https://ddys.pro"
     override var name = "低端影视"
 
     override val hasMainPage = true
@@ -95,7 +95,8 @@ class DdysProvider : MainAPI() {
             year = abstracts?.find { it.startsWith("年份:") }
                 ?.substringAfter("年份:")?.trim()?.toIntOrNull()
             plot = abstracts?.find { it.startsWith("简介:") }?.substringAfter("简介:")?.trim()
-            posterUrl = doc.selectFirst(".doulist-item img")?.attr("data-src")
+            posterUrl = doc.selectFirst(".doulist-item img")?.attr("src")
+            posterHeaders = mapOf("Referer" to "$mainUrl/")
             tags = doc.select(".tags-links a").map { it.text() }
             seasonNames = seasons
         }
@@ -109,8 +110,13 @@ class DdysProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val track = parseJson<Track>(data)
+        val api = when (track.srctype) {
+            "1" -> "getvddr2"
+            "2" -> "getvddr3"
+            else -> "getvddr"
+        }
         val linkCN = app.get(
-            "$mainUrl/getvddr/video?id=${track.src1}&dim=1080P&type=mix",
+            "$mainUrl/$api/video?id=${track.src1}&type=json",
             referer = "$mainUrl/"
         ).parsedSafe<PlayUrl>()
         linkCN?.let {
@@ -129,8 +135,8 @@ class DdysProvider : MainAPI() {
                 ExtractorLink(
                     name,
                     "海外节点",
-                    "https://w.ddys.tv${track.src0}?ddrkey=${track.src2}",
-                    "",
+                    "https://v.ddys.pro${track.src0}?ddrkey=${track.src2}",
+                    "$mainUrl/",
                     Qualities.Unknown.value
                 )
             )
@@ -141,7 +147,7 @@ class DdysProvider : MainAPI() {
     override fun getVideoInterceptor(extractorLink: ExtractorLink): Interceptor {
         return object : Interceptor {
             override fun intercept(chain: Interceptor.Chain): Response {
-                return chain.proceed(chain.request().newBuilder().removeHeader("referer").build())
+                return chain.proceed(chain.request())
             }
         }
     }
@@ -158,7 +164,8 @@ class DdysProvider : MainAPI() {
         val src0: String,
         val src1: String,
         val src2: String,
-        val caption: String
+        val caption: String,
+        val srctype: String
     )
 
     data class PlayUrl(
