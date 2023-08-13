@@ -121,8 +121,10 @@ class Movie123Provider : MainAPI() {
                 referer = url,
                 headers = headers
             ).text
-            val json = base64Decode(encryptedData).xorDecrypt()
-            val links = tryParseJson<List<VideoLink>>(json) ?: return@amap
+            val json = base64Decode(encryptedData)
+            val links = tryParseJson<List<VideoLink>>(json.xorDecrypt("123"))
+                ?: tryParseJson<List<VideoLink>>(json.xorDecrypt("124"))
+                ?: return@amap
             links.forEach { video ->
                 qualities.filter { it <= video.max.toInt() }.forEach {
                     callback(
