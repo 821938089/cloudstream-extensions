@@ -122,7 +122,8 @@ class Movie123Provider : MainAPI() {
                 headers = headers
             ).text
             val json = base64Decode(encryptedData)
-            val links = tryParseJson<List<VideoLink>>(json.xorDecrypt("120"))
+            val links = tryParseJson<List<VideoLink>>(json.xorDecrypt("119"))
+                ?: tryParseJson<List<VideoLink>>(json.xorDecrypt("120"))
                 ?: tryParseJson<List<VideoLink>>(json.xorDecrypt("123"))
                 ?: tryParseJson<List<VideoLink>>(json.xorDecrypt("124"))
                 ?: return@amap
