@@ -50,7 +50,7 @@ class SuperVodPlugin : Plugin() {
         // iva,kkyun
 //        addVodSource("速更影视", "https://www.sugengzy.cn/api.php/provide/vod/")
         // ptm3u8,ptyun
-        addVodSource("阳光影视", "https://www.xxzy.org/api.php/provide/vod/from/ptyun/")
+//        addVodSource("阳光影视", "https://www.xxzy.org/api.php/provide/vod/from/ptyun/")
         // ikm3u8
         addVodSource("iKun影视", "https://ikunzyapi.com/api.php/provide/vod")
         // yhm3u8
@@ -62,11 +62,11 @@ class SuperVodPlugin : Plugin() {
         // sdyun,sdm3u8
         addVodSource("闪电影视", "https://sdzyapi.com/api.php/provide/vod/from/sdm3u8/")
         // lezy,lem3u8
-        addVodSource("鱼乐影视", "https://api.yulecj.com/api.php/provide/vod/from/lem3u8/")
+//        addVodSource("鱼乐影视", "https://api.yulecj.com/api.php/provide/vod/from/lem3u8/")
         // tom,tomm3u8
-        addVodSource("Tom影视", "https://www.tomziyuan.com/api.php/provide/vod/from/tomm3u8/")
+//        addVodSource("Tom影视", "https://www.tomziyuan.com/api.php/provide/vod/from/tomm3u8/")
         // wjm3u8
-        addVodSource("无尽影视", "https://api.wujinapi.me/api.php/provide/vod/from/wjm3u8/")
+//        addVodSource("无尽影视", "https://api.wujinapi.me/api.php/provide/vod/from/wjm3u8/")
         // gsm3u8
         addVodSource("光速影视", "https://api.guangsuapi.com/api.php/provide/vod/from/gsm3u8/")
         // ffm3u8
@@ -105,17 +105,17 @@ class SuperVodPlugin : Plugin() {
             name = "新浪影视"
             apiUrl = "https://api.xinlangapi.com/xinlangapi.php/provide/vod/from/xlm3u8/"
         }
-        addVodSource {
-            // kuaikan,kuaikanyun
-            name = "快看影视"
-            apiUrl = "https://kuaikan-api.com/api.php/provide/vod/from/kuaikan/"
-            skipCategory = 9
-        }
-        addVodSource {
-            // okm3u8
-            name = "OK影视"
-            apiUrl = "https://okzy1.tv/api.php/provide/vod/"
-        }
+//        addVodSource {
+//            // kuaikan,kuaikanyun
+//            name = "快看影视"
+//            apiUrl = "https://kuaikan-api.com/api.php/provide/vod/from/kuaikan/"
+//            skipCategory = 9
+//        }
+//        addVodSource {
+//            // okm3u8
+//            name = "OK影视"
+//            apiUrl = "https://okzy1.tv/api.php/provide/vod/"
+//        }
         addVodSource {
             // qhyun,qhm3u8
             name = "奇虎影视"
@@ -126,11 +126,11 @@ class SuperVodPlugin : Plugin() {
             name = "大漠影视"
             apiUrl = "https://damozy.com/api.php/provide/vod/from/M3U8/"
         }
-        addVodSource {
-            // 68zy_yun,68zy_m3u8
-            name = "68影视"
-            apiUrl = "https://caiji.68zyapi.com/api.php/provide/vod/from/68zy_m3u8/"
-        }
+//        addVodSource {
+//            // 68zy_yun,68zy_m3u8
+//            name = "68影视"
+//            apiUrl = "https://caiji.68zyapi.com/api.php/provide/vod/from/68zy_m3u8/"
+//        }
         //registerMainAPI(JiangNanProvider())
 
         // -----------------------------------
