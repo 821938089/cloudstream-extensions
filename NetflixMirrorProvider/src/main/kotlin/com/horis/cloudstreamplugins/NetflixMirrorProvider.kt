@@ -9,7 +9,10 @@ import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.getQualityFromName
 import okhttp3.Headers
+import okhttp3.Interceptor
+import okhttp3.Response
 import org.jsoup.nodes.Element
 
 class NetflixMirrorProvider : MainAPI() {
@@ -24,9 +27,13 @@ class NetflixMirrorProvider : MainAPI() {
 
     override val hasMainPage = true
     private var time = ""
+    private val cookies = mapOf("hd" to "on")
+    private val headers = mapOf(
+        "X-Requested-With" to "XMLHttpRequest"
+    )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
-        val document = app.get("$mainUrl/home").document
+        val document = app.get("$mainUrl/home", cookies = cookies).document
         time = document.select("body").attr("data-time")
         val items = document.select(".tray-container, #top10").map {
             it.toHomePageList()
@@ -55,7 +62,7 @@ class NetflixMirrorProvider : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val url = "$mainUrl/search.php?s=$query&t=$time"
-        val data = app.get(url, referer = "$mainUrl/").parsed<SearchData>()
+        val data = app.get(url, referer = "$mainUrl/", cookies = cookies).parsed<SearchData>()
 
         return data.searchResult.map {
             newAnimeSearchResponse(it.t, Id(it.id).toJson()) {
@@ -66,12 +73,9 @@ class NetflixMirrorProvider : MainAPI() {
     }
 
     override suspend fun load(url: String): LoadResponse? {
-        val headers = mapOf(
-            "X-Requested-With" to "XMLHttpRequest"
-        )
         val id = parseJson<Id>(url).id
         val data = app.get(
-            "$mainUrl/post.php?id=$id&t=$time", referer = "$mainUrl/", headers = headers
+            "$mainUrl/post.php?id=$id&t=$time", headers, referer = "$mainUrl/", cookies = cookies
         ).parsed<PostData>()
 
         val episodes = arrayListOf<Episode>()
@@ -116,13 +120,11 @@ class NetflixMirrorProvider : MainAPI() {
         val episodes = arrayListOf<Episode>()
         var pg = page
         while (true) {
-            val headers = mapOf(
-                "X-Requested-With" to "XMLHttpRequest"
-            )
             val data = app.get(
                 "$mainUrl/episodes.php?s=$sid&series=$eid&t=$time&page=$pg",
+                headers,
                 referer = "$mainUrl/",
-                headers = headers
+                cookies = cookies
             ).parsed<EpisodesData>()
             data.episodes?.mapTo(episodes) {
                 newEpisode(LoadData(title, it.id)) {
@@ -144,25 +146,44 @@ class NetflixMirrorProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val (title, id) = parseJson<LoadData>(data)
-        val headers = mapOf(
-            "X-Requested-With" to "XMLHttpRequest"
-        )
         val playlist = app.get(
             "$mainUrl/playlist.php?id=$id&t=$title&tm=$time",
+            headers,
             referer = "$mainUrl/",
-            headers = headers
+            cookies = cookies
         ).parsed<PlayList>()
 
         playlist.forEach { item ->
             item.sources.forEach {
                 callback(
                     ExtractorLink(
-                        name, it.label, fixUrl(it.file), "$mainUrl/", Qualities.Unknown.value, true
+                        name,
+                        it.label,
+                        fixUrl(it.file),
+                        "$mainUrl/",
+                        getQualityFromName(it.file.substringAfter("q=", "")),
+                        true
                     )
                 )
             }
         }
         return true
+    }
+
+    @Suppress("ObjectLiteralToLambda")
+    override fun getVideoInterceptor(extractorLink: ExtractorLink): Interceptor? {
+        return object : Interceptor {
+            override fun intercept(chain: Interceptor.Chain): Response {
+                val request = chain.request()
+                if (request.url.toString().contains(".m3u8")) {
+                    val newRequest = request.newBuilder()
+                        .header("Cookie", "hd=on")
+                        .build()
+                    return chain.proceed(newRequest)
+                }
+                return chain.proceed(request)
+            }
+        }
     }
 
     data class Id(
