@@ -34,7 +34,7 @@ class BDNewsZHProvider : MainAPI() {
     )
 
     private val api = "http://streamsapi.xyz/api/"
-    private val rugbyApi = "http://api.bdnewszh.com/rugby.json"
+    private val rugbyApi = "http://api.rainostream.net/rugby.json"
 
     private val utcDateFormat by lazy {
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").apply {
