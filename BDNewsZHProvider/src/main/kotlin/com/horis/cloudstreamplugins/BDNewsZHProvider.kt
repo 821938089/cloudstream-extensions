@@ -15,8 +15,8 @@ class BDNewsZHProvider : MainAPI() {
     )
     override var lang = "en"
 
-    override var mainUrl = "https://live.bdnewszh.com"
-    override var name = "BDNewsZH"
+    override var mainUrl = "https://rainostream.net"
+    override var name = "rainostream"
 
     override val hasMainPage = true
 
