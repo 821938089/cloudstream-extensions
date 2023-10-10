@@ -12,7 +12,7 @@ class BollywoodPlugin : Plugin() {
 //        registerMainAPI(BollywoodProvider())
 //        registerMainAPI(HollywoodProvider())
         registerMainAPI(GDIndexProvider())
-        registerMainAPI(ShinobiCloudProvider())
+//        registerMainAPI(ShinobiCloudProvider())
 //        registerMainAPI(UltimateCourseProvider())
 //        registerMainAPI(NGIndexProvider())
 //        registerMainAPI(LemonMoviesProvider())

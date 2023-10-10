@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @SuppressLint("SimpleDateFormat")
-class BDNewsZHProvider : MainAPI() {
+class RainostreamProvider : MainAPI() {
     override val supportedTypes = setOf(
         TvType.Live
     )
