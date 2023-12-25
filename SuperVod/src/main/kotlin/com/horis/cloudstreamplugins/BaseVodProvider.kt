@@ -12,7 +12,7 @@ abstract class BaseVodProvider : MainAPI() {
 
     companion object {
         const val TAG = "BaseVodProvider"
-        val nsfwCategory = listOf("伦理")
+        val nsfwCategory = listOf("伦理", "里番")
     }
 
     override val supportedTypes = setOf(
@@ -37,7 +37,7 @@ abstract class BaseVodProvider : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse? {
         val categoryList = apiExtractor.getCategory(skip = skipCategory).filter { cat ->
-            nsfwCategory.any { !cat.typeName.contains(it) }
+            !nsfwCategory.any { cat.typeName.contains(it) }
         }
         if (mainPage.first().name.isEmpty()) {
             makeMainPage(categoryList)
@@ -107,10 +107,10 @@ abstract class BaseVodProvider : MainAPI() {
             serverNames.add(SeasonData(index + 1, servers[index]))
             for (playInfo in vodPlayList.trimEnd('#').split("#")) {
                 val (episodeName, playUrl) = playInfo.split("$")
-                if (filterM3U8Url && !playUrl.endsWith(".m3u8")) {
-                    serverNames.removeLast()
-                    continue@loop
-                }
+//                if (filterM3U8Url && !playUrl.endsWith(".m3u8")) {
+//                    serverNames.removeLast()
+//                    continue@loop
+//                }
                 val data = PlayData(servers[index], playUrl).toJson()
                 episodes.add(newEpisode(data) {
                     name = episodeName
@@ -150,7 +150,7 @@ abstract class BaseVodProvider : MainAPI() {
                 playData.url,
                 "",
                 Qualities.Unknown.value,
-                true
+                playData.url.endsWith(".m3u8", true)
             )
         )
         return true

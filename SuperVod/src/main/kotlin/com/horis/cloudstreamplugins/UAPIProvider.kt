@@ -1,6 +1,5 @@
 package com.horis.cloudstreamplugins
 
-import android.util.Log
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
 

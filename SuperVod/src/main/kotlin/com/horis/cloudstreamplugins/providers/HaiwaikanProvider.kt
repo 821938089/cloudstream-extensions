@@ -1,5 +1,6 @@
-package com.horis.cloudstreamplugins
+package com.horis.cloudstreamplugins.providers
 
+import com.horis.cloudstreamplugins.BaseVodProvider
 import com.lagradost.cloudstream3.ErrorLoadingException
 import com.lagradost.cloudstream3.SearchResponse
 

@@ -1,6 +1,5 @@
 package com.horis.cloudstreamplugins
 
-import android.app.Activity
 import com.fasterxml.jackson.core.json.JsonReadFeature
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -9,11 +8,9 @@ import com.horis.cloudstreamplugins.apiextractors.CollectAPIExtractor
 import com.horis.cloudstreamplugins.apiextractors.CollectXMLExtractor
 import com.horis.cloudstreamplugins.apiextractors.VodAPIExtractor
 import com.horis.cloudstreamplugins.apis.CollectAPI
-import com.lagradost.cloudstream3.CommonActivity
 import com.lagradost.cloudstream3.USER_AGENT
 import com.lagradost.nicehttp.Requests
 import com.lagradost.nicehttp.ResponseParser
-import java.lang.ref.WeakReference
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec

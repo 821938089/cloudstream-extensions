@@ -1,7 +1,10 @@
-package com.horis.cloudstreamplugins
+package com.horis.cloudstreamplugins.providers
 
+import com.horis.cloudstreamplugins.BaseVodProvider
+import com.horis.cloudstreamplugins.PlayData
+import com.horis.cloudstreamplugins.app
+import com.horis.cloudstreamplugins.makeApiExtractor
 import com.lagradost.cloudstream3.SubtitleFile
-import com.lagradost.cloudstream3.network.WebViewResolver
 import com.lagradost.cloudstream3.utils.AppUtils
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
