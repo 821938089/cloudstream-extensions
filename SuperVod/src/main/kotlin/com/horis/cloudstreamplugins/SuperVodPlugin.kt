@@ -116,11 +116,11 @@ class SuperVodPlugin : Plugin() {
 //            name = "OK影视"
 //            apiUrl = "https://okzy1.tv/api.php/provide/vod/"
 //        }
-        addVodSource {
-            // qhyun,qhm3u8
-            name = "奇虎影视"
-            apiUrl = "https://caiji.qhzyapi.com/api.php/provide/vod/from/qhm3u8/"
-        }
+//        addVodSource {
+//            // qhyun,qhm3u8
+//            name = "奇虎影视"
+//            apiUrl = "https://caiji.qhzyapi.com/api.php/provide/vod/from/qhm3u8/"
+//        }
 //        addVodSource {
 //            // damo,M3U8
 //            name = "大漠影视"
@@ -131,81 +131,86 @@ class SuperVodPlugin : Plugin() {
             name = "索尼影视"
             apiUrl = "https://suoniapi.com/api.php/provide/vod/from/snm3u8/"
         }
-        addVodSource {
-            // zzdj
-            name = "种子短剧"
-            apiUrl = "https://zzdj.cc/api.php/provide/vod/from/zzdj/"
-        }
-        addVodSource {
-            // leshi
-            name = "乐视影视"
-            apiUrl = "https://leshizyapi.com/api.php/provide/vod/from/leshi/"
-        }
+//        addVodSource {
+//            // zzdj
+//            name = "种子短剧"
+//            apiUrl = "https://zzdj.cc/api.php/provide/vod/from/zzdj/"
+//        }
+//        addVodSource {
+//            // leshi
+//            name = "乐视影视"
+//            apiUrl = "https://leshizyapi.com/api.php/provide/vod/from/leshi/"
+//        }
         addVodSource {
             // modum3u8
             name = "魔都动漫"
             apiUrl = "https://caiji.moduapi.cc/api.php/provide/vod/from/modum3u8/"
         }
-        addVodSource {
-            // yxys
-            name = "耀协影视"
-            apiUrl = "http://zyz.yxys.top/api.php/provide/vod/from/yxys/"
-        }
+//        addVodSource {
+//            // yxys
+//            name = "耀协影视"
+//            apiUrl = "http://zyz.yxys.top/api.php/provide/vod/from/yxys/"
+//        }
         addVodSource {
             // hhm3u8
             name = "豪华影视"
             apiUrl = "https://hhzyapi.com/api.php/provide/vod/from/hhm3u8/"
         }
-        addVodSource {
-            // dplayer
-            name = "加菲猫影视"
-            apiUrl = "https://xzcjz.com/api.php/provide/vod/"
-        }
-        addVodSource {
-            // 49zyw
-            name = "49影视"
-            apiUrl = "https://49zyw.com/api.php/provide/vod/from/49zyw/"
-        }
-        addVodSource {
-            // jiguang
-            name = "极光影视"
-            apiUrl = "https://jiguang.la/api.php/provide/vod/from/jiguang/"
-        }
-        addVodSource {
-            // kuaiyun
-            name = "快云影视"
-            apiUrl = "https://kuaiyun-api.com/api.php/provide/vod/from/kuaiyun/"
-            skipCategory = 9
-        }
+//        addVodSource {
+//            // dplayer
+//            name = "加菲猫影视"
+//            apiUrl = "https://xzcjz.com/api.php/provide/vod/"
+//        }
+//        addVodSource {
+//            // 49zyw
+//            name = "49影视"
+//            apiUrl = "https://49zyw.com/api.php/provide/vod/from/49zyw/"
+//        }
+//        addVodSource {
+//            // jiguang
+//            name = "极光影视"
+//            apiUrl = "https://jiguang.la/api.php/provide/vod/from/jiguang/"
+//        }
+//        addVodSource {
+//            // kuaiyun
+//            name = "快云影视"
+//            apiUrl = "https://kuaiyun-api.com/api.php/provide/vod/from/kuaiyun/"
+//            skipCategory = 9
+//        }
         addVodSource {
             // kuaikan
             name = "快看影视"
             apiUrl = "https://kuaikan-api.com/api.php/provide/vod/from/kuaikan/"
             skipCategory = 9
         }
-        addVodSource {
-            // qhm3u8
-            name = "奇虎影视"
-            apiUrl = "https://caiji.qhzyapi.com/api.php/provide/vod/from/qhm3u8/"
-            skipCategory = 5
-        }
-        addVodSource {
-            // haiwaikan
-            name = "海外看影视"
-            apiUrl = "https://haiwaikan.com/api.php/provide/vod/from/haiwaikan/"
-        }
+//        addVodSource {
+//            // qhm3u8
+//            name = "奇虎影视"
+//            apiUrl = "https://caiji.qhzyapi.com/api.php/provide/vod/from/qhm3u8/"
+//            skipCategory = 5
+//        }
+//        addVodSource {
+//            // haiwaikan
+//            name = "海外看影视"
+//            apiUrl = "https://haiwaikan.com/api.php/provide/vod/from/haiwaikan/"
+//        }
 //        addVodSource {
 //            // 68zy_yun,68zy_m3u8
 //            name = "68影视"
 //            apiUrl = "https://caiji.68zyapi.com/api.php/provide/vod/from/68zy_m3u8/"
 //        }
         //registerMainAPI(JiangNanProvider())
+        addVodSource {
+            // hw8
+            name = "华为吧影视"
+            apiUrl = "https://cjhwba.com/api.php/provide/vod/from/hw8/"
+        }
 
         // -----------------------------------
         // haiwaikan
         // https://olevod1.com/api.php/provide/vod/
         // https://olevod2.com/api.php/provide/vod/
-        addVodSource("欧乐影视", "https://olevodtv.com/api.php/provide/vod/")
+//        addVodSource("欧乐影视", "https://olevodtv.com/api.php/provide/vod/")
         // bjyun,bjm3u8,tkyun,tkm3u8,dbyun,dbm3u8
         // http://104.149.175.67/api.php/provide/vod/
         addVodSource("神马聚合影视", "https://img.smdyw.top/api.php/provide/vod/")
@@ -214,12 +219,12 @@ class SuperVodPlugin : Plugin() {
         // wjm3u8,if101,dbm3u8,qiyi,youku,qq,hnm3u8
         addVodSource("影图影视", "https://cj.vodimg.top/api.php/provide/vod/")
         // wjm3u8,fsm3u8,bjm3u8
-        addVodSource("乐活影视", "https://lehootv.com/api.php/provide/vod/")
+//        addVodSource("乐活影视", "https://lehootv.com/api.php/provide/vod/")
         // zuidam3u8,zuidall,kbm3u8
-        addVodSource("蓝光影视", "http://www.zzrhgg.com/api.php/provide/vod/")
+//        addVodSource("蓝光影视", "http://www.zzrhgg.com/api.php/provide/vod/")
         // haiwaikan
 //        addVodSource("1080P影视", "https://1080p.tv/api.php/provide/vod/")
-        addVodSource("789盘影视", "https://www.rrvipw.com/api.php/provide/vod/")
+//        addVodSource("789盘影视", "https://www.rrvipw.com/api.php/provide/vod/")
 //        addVodSource("韦青影视", "https://lehootv.com/api.php/provide/vod/")
 //        addVodSource("网民影视", "https://www.prinevillesda.org/api.php/provide/vod/")
         // mahua,123kum3u8,kbm3u8

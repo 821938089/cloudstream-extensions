@@ -2,7 +2,6 @@ package com.horis.cloudstreamplugins
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.utils.AppUtils
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.M3u8Helper
 import com.lagradost.cloudstream3.utils.Qualities
@@ -77,6 +76,7 @@ class LibvioProvider : MainAPI() {
             if (route == "猜你喜欢") continue
             if (route == "LINE100") continue
             if (route.contains("网盘")) continue
+            if (route.contains("下载")) continue
             routeNames.add(SeasonData(index + 1, route))
             for (ep in it.select(".stui-content__playlist a")) {
                 val episodeUrl = ep.attr("href") ?: continue
@@ -111,7 +111,9 @@ class LibvioProvider : MainAPI() {
 
         val js = app.get("$mainUrl/static/player/${playData.from}.js?v=1.3").text
         val src = js.substring("src=\"", "'")
-        val url = "$src${playData.url}&next=${playData.linkNext}&id=${playData.id}&nid=${playData.nId}"
+        val url = fixUrl(
+            "$src${playData.url}&next=${playData.linkNext}&id=${playData.id}&nid=${playData.nId}"
+        )
 //        if (playData.from == "duoduozy") {
 //            "$src${playData.url}"
 //        } else {
