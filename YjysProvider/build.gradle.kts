@@ -23,5 +23,5 @@ cloudstream {
     // https://recloudstream.github.io/cloudstream/html/app/com.lagradost.cloudstream3/-tv-type/index.html
     tvTypes = listOf("Movie", "AnimeMovie", "TvSeries", "Anime", "AsianDrama", "Others")
 
-    iconUrl = "https://www.google.com/s2/favicons?domain=www.bdys01.com&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=www.yjys02.com&sz=%size%"
 }

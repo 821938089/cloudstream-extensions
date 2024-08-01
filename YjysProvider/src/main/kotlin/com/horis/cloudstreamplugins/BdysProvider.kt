@@ -24,8 +24,9 @@ class BdysProvider : MainAPI() {
     )
     override var lang = "zh"
 
-    override var mainUrl = "https://www.bdys01.com"
-    override var name = "哔嘀影视"
+    // https://www.bdys.me/
+    override var mainUrl = "https://www.yjys02.com"
+    override var name = "缘觉影视"
 
     override val hasMainPage = true
     private val cloudflareKiller by lazy { CloudflareKiller() }
@@ -97,7 +98,7 @@ class BdysProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse? {
         val doc = app.get(url, referer = "$mainUrl/", cookies = cookies).document
-        val name = doc.selectFirst("h2")?.text() ?: error("解析数据失败（标题）")
+        val name = doc.selectFirst("h2.d-sm-block")?.text() ?: error("解析数据失败（标题）")
         val episodes = doc.select("#play-list a").map {
             val url1 = fixUrl(it.attr("href"))
             newEpisode(url1) {
