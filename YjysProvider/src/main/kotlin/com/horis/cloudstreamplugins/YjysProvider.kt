@@ -13,7 +13,7 @@ import okio.ByteString.Companion.encode
 import okio.ByteString.Companion.toByteString
 import org.jsoup.nodes.Element
 
-class BdysProvider : MainAPI() {
+class YjysProvider : MainAPI() {
     override val supportedTypes = setOf(
         TvType.Movie,
         TvType.AnimeMovie,
@@ -172,9 +172,9 @@ class BdysProvider : MainAPI() {
         return true
     }
 
-    private fun String.toLink(name: String = this@BdysProvider.name): ExtractorLink {
+    private fun String.toLink(name: String = this@YjysProvider.name): ExtractorLink {
         return ExtractorLink(
-            this@BdysProvider.name,
+            this@YjysProvider.name,
             name,
             this,
             "",
