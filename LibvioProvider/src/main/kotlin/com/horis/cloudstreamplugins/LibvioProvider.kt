@@ -68,7 +68,7 @@ class LibvioProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse? {
         val doc = app.get(url, referer = "$mainUrl/").document
-        val name = doc.selectFirst(".title a")?.text() ?: return null
+        val name = doc.selectFirst("h1")?.text() ?: return null
         val episodes = ArrayList<Episode>()
         val routeNames = ArrayList<SeasonData>()
         for ((index, it) in doc.select(".stui-vodlist__head").withIndex()) {
