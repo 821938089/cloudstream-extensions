@@ -120,7 +120,7 @@ class LibvioProvider : MainAPI() {
 //            "$src${playData.url}&next=${playData.linkNext}&id=${playData.id}&nid=${playData.nId}"
 //        }
         html = app.get(url, referer = "$mainUrl/").text
-        val m3u8Url = html.substring("var urls = '", "';")
+        val m3u8Url = html.substring("var vid = '", "';")
 
         if (m3u8Url.isBlank()) return false
         if (m3u8Url.indexOf(".m3u8") > -1) {
