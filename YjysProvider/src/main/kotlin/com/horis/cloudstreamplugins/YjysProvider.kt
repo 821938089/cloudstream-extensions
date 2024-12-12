@@ -25,8 +25,8 @@ class YjysProvider : MainAPI() {
     override var lang = "zh"
 
     // https://www.bdys.me/
-    override var mainUrl = "https://www.yjys02.com"
-    override var name = "缘觉影视"
+    override var mainUrl = "https://www.xlys01.com/"
+    override var name = "修罗影视"
 
     override val hasMainPage = true
     private val cloudflareKiller by lazy { CloudflareKiller() }
